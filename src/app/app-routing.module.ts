@@ -6,9 +6,9 @@ import { UserProfileComponent } from './components/user-profile/user-profile.com
 import { AuthGuard } from "./shared/auth.guard";
 
 const routes: Routes = [
-  { path: '', redirectTo: '/log-in', pathMatch: 'full' },
-  { path: 'log-in', component: LoginComponent },
-  { path: 'sign-up', component: SignupComponent },
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: 'login', component: LoginComponent },
+  { path: 'signup', component: SignupComponent },
   { path: 'user-profile/:id', component: UserProfileComponent, canActivate: [AuthGuard] }
 ];
 
