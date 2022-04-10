@@ -14,26 +14,27 @@ import { Router } from '@angular/router';
 })
 
 export class AuthService {
-  endpoint: string = 'http://localhost:4000/api';
+  endpoint: string = 'http://localhost:3000';
   headers = new HttpHeaders().set('Content-Type', 'application/json');
   currentUser = {};
   constructor(private http: HttpClient, public router: Router) {}
+  
   // Sign-up
   signUp(user: User): Observable<any> {
-    let api = `${this.endpoint}/register-user`;
+    let api = `${this.endpoint}/users`;
     return this.http.post(api, user).pipe(catchError(this.handleError));
   }
 
   // Sign-in
   logIn(user: User) {
+    let request_body = {'email': user.email, 'password': user.password};
+
     return this.http
-      .post<any>(`${this.endpoint}/login`, user)
+      .post<any>(`${this.endpoint}/login`, request_body)
       .subscribe((res: any) => {
         localStorage.setItem('access_token', res.token);
-        this.getUserProfile(res._id).subscribe((res) => {
-          this.currentUser = res;
-          this.router.navigate(['user-profile/' + res.msg._id]);
-        });
+        console.log(res)
+        this.router.navigate(['snippets']);
       });
   }
 
@@ -49,13 +50,13 @@ export class AuthService {
   doLogout() {
     let removeToken = localStorage.removeItem('access_token');
     if (removeToken == null) {
-      this.router.navigate(['log-in']);
+      this.router.navigate(['login']);
     }
   }
 
   // User profile
-  getUserProfile(id: any): Observable<any> {
-    let api = `${this.endpoint}/user-profile/${id}`;
+  getSnippetsList(): Observable<any> {
+    let api = `${this.endpoint}/snippets`;
     return this.http.get(api, { headers: this.headers }).pipe(
       map((res) => {
         return res || {};

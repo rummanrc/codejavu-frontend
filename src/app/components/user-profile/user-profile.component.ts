@@ -4,7 +4,7 @@ import { AuthService } from './../../shared/auth.service';
 @Component({
   selector: 'app-user-profile',
   templateUrl: './user-profile.component.html',
-  styleUrls: ['./user-profile.component.scss'],
+  styleUrls: ['./user-profile.component.css'],
 })
 export class UserProfileComponent implements OnInit {
   currentUser: Object = {};
@@ -13,7 +13,7 @@ export class UserProfileComponent implements OnInit {
     private actRoute: ActivatedRoute
   ) {
     let id = this.actRoute.snapshot.paramMap.get('id');
-    this.authService.getUserProfile(id).subscribe((res) => {
+    this.authService.getSnippetsList().subscribe((res) => {
       this.currentUser = res.msg;
     });
   }
