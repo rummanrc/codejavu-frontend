@@ -5,7 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './components/login/login.component';
 import { SignupComponent } from './components/signup/signup.component';
-import { UserProfileComponent } from './components/user-profile/user-profile.component';
+import { SnippetComponent } from './components/snippet/snippet.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './shared/authconfig.interceptor';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
@@ -16,7 +16,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     AppComponent,
     LoginComponent,
     SignupComponent,
-    UserProfileComponent
+    SnippetComponent
   ],
   imports: [
     BrowserModule,

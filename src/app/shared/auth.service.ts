@@ -33,7 +33,6 @@ export class AuthService {
       .post<any>(`${this.endpoint}/login`, request_body)
       .subscribe((res: any) => {
         localStorage.setItem('access_token', res.token);
-        console.log(res)
         this.router.navigate(['snippets']);
       });
   }
