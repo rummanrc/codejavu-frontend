@@ -7,15 +7,16 @@ import { AuthService } from '../../shared/auth.service';
   styleUrls: ['./snippet.component.css'],
 })
 export class SnippetComponent implements OnInit {
-  Snippets: Object = {};
+  snippets: any[] = [];
   constructor(
     public authService: AuthService,
     private actRoute: ActivatedRoute
   ) {
     let id = this.actRoute.snapshot.paramMap.get('id');
     this.authService.getSnippetsList().subscribe((res) => {
-      this.Snippets = res.msg;
+      this.snippets.push(res);
     });
+    console.log(this.snippets)
   }
   ngOnInit() {}
 }
