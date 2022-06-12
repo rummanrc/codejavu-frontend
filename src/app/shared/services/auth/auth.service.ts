@@ -18,7 +18,7 @@ export class AuthService {
   headers = new HttpHeaders().set('Content-Type', 'application/json');
   currentUser = {};
   constructor(private http: HttpClient, public router: Router) {}
-  
+
   // Sign-up
   signUp(user: User): Observable<any> {
     let api = `${this.endpoint}/users`;
@@ -53,7 +53,7 @@ export class AuthService {
     }
   }
 
-  // User profile
+  // User profile0000
   getSnippetsList(): Observable<any> {
     let api = `${this.endpoint}/snippets`;
     return this.http.get(api, { headers: this.headers }).pipe(
@@ -63,7 +63,7 @@ export class AuthService {
       catchError(this.handleError)
     );
   }
-  
+
   // Error
   handleError(error: HttpErrorResponse) {
     let msg = '';
