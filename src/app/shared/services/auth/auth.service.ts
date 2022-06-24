@@ -1,79 +1,35 @@
 import { Injectable } from '@angular/core';
 import { User } from './user';
-import { Observable, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
-import {
-  HttpClient,
-  HttpHeaders,
-  HttpErrorResponse,
-} from '@angular/common/http';
+import {BehaviorSubject, Observable, share} from 'rxjs';
 import { Router } from '@angular/router';
+import {RestService} from "../rest/rest.service";
+import {RestRoute} from "../rest/rest-route";
 
 @Injectable({
   providedIn: 'root',
 })
 
 export class AuthService {
-  endpoint: string = 'http://localhost:3000';
-  headers = new HttpHeaders().set('Content-Type', 'application/json');
-  currentUser = {};
-  constructor(private http: HttpClient, public router: Router) {}
+  private _token: BehaviorSubject<string> = new BehaviorSubject('')
 
-  // Sign-up
+  constructor(private _rest: RestService, public router: Router) {}
   signUp(user: User): Observable<any> {
-    let api = `${this.endpoint}/users`;
-    return this.http.post(api, user).pipe(catchError(this.handleError));
+    let api = this._rest.url(RestRoute.USERS);
+    return this._rest.post(api, user);
   }
-
-  // Sign-in
   logIn(user: User) {
-    let request_body = {'email': user.email, 'password': user.password};
-
-    return this.http
-      .post<any>(`${this.endpoint}/login`, request_body)
-      .subscribe((res: any) => {
-        localStorage.setItem('access_token', res.token);
-        this.router.navigate(['snippets']);
-      });
-  }
-
-  getToken() {
-    return localStorage.getItem('access_token');
-  }
-
-  get isLoggedIn(): boolean {
-    let authToken = localStorage.getItem('access_token');
-    return authToken !== null ? true : false;
+    const request_body = {'email': user.email, 'password': user.password};
+    const api = this._rest.url(RestRoute.LOGIN);
+    const result = this._rest.post<any>(api, request_body).pipe(share());
+    result.subscribe(
+      (res) => {
+        this._token.next(res.token)
+      }
+    )
   }
 
   doLogout() {
-    let removeToken = localStorage.removeItem('access_token');
-    if (removeToken == null) {
-      this.router.navigate(['login']);
-    }
-  }
-
-  // User profile0000
-  getSnippetsList(): Observable<any> {
-    let api = `${this.endpoint}/snippets`;
-    return this.http.get(api, { headers: this.headers }).pipe(
-      map((res) => {
-        return res || {};
-      }),
-      catchError(this.handleError)
-    );
-  }
-
-  // Error
-  handleError(error: HttpErrorResponse) {
-    let msg = '';
-    if (error.error instanceof ErrorEvent) {
-      // client-side error
-      msg = error.error.message;
-    } else {
-      // server-side error
-      msg = `Error Code: ${error.status}\nMessage: ${error.message}`;
-    }
-    return throwError(msg);
+    this._token.next('');
+    //TODO: call backend logout
   }
 }
