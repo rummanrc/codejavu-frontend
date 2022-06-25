@@ -37,8 +37,11 @@ export class AuthService implements HttpInterceptor{
     const result = this._rest.post<any>(api, request_body).pipe(share());
     result.subscribe(
       (res) => {
-        this._token.next(res.token)
-      }
+        this._token.next(res.token);
+      },
+    () => {
+      this._token.next('');
+    }
     )
   }
 
