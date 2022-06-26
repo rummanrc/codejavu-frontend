@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AuthService } from '../../shared/services/auth/auth.service';
-import {RestService} from "../../shared/services/rest/rest.service";
-import {RestRoute} from "../../shared/services/rest/rest-route";
+import { AuthService } from '../../../shared/services/auth/auth.service';
+import {RestService} from "../../../shared/services/rest/rest.service";
+import {RestRoute} from "../../../shared/services/rest/rest-route";
 import {map} from "rxjs";
 @Component({
   selector: 'app-snippet',

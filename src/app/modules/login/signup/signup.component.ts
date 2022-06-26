@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { AuthService } from '../../shared/services/auth/auth.service';
+import { AuthService } from '../../../shared/services/auth/auth.service';
 import { Router } from '@angular/router';
 @Component({
   selector: 'app-signup',
-  templateUrl: './signup.component.html',
+  templateUrl: '/signup.component.html',
   styleUrls: ['./signup.component.css'],
 })
 export class SignupComponent implements OnInit {
