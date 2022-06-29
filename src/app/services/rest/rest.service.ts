@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {AppConfig} from "../../../app-config";
+import {AppConfig} from "../../app-config";
 import {HttpClient, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {AuthService} from "../auth/auth.service";

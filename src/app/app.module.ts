@@ -5,8 +5,8 @@ import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {RestService} from "./shared/services/rest/rest.service";
-import {AuthService} from "./shared/services/auth/auth.service";
+import {RestService} from "./services/rest/rest.service";
+import {AuthService} from "./services/auth/auth.service";
 import {LoginModule} from "./modules/login/login.module";
 import {SnippetModule} from "./modules/snippet/snippet.module";
 
