@@ -2,13 +2,14 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HttpClientModule } from '@angular/common/http';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import {HttpClientModule, HttpHandler} from '@angular/common/http';
+import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {RestService} from "./services/rest/rest.service";
 import {AuthService} from "./services/auth/auth.service";
 import {LoginModule} from "./modules/login/login.module";
 import {SnippetModule} from "./modules/snippet/snippet.module";
+import {RouteService} from "./services/route/route.service";
 
 @NgModule({
   declarations: [
@@ -24,9 +25,18 @@ import {SnippetModule} from "./modules/snippet/snippet.module";
     SnippetModule
   ],
   providers: [
+    RestService,
     AuthService,
-    RestService
+    RouteService,
+    {
+      provide: RestService,
+      useFactory: restServiceFactory,
+      deps: [HttpHandler]
+    }
   ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+export function restServiceFactory(httpHandler:HttpHandler){
+  return new RestService(httpHandler);
+}

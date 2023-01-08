@@ -3,11 +3,11 @@
   <h5 class="my-0 mr-md-auto font-weight-normal">CoDeJaVu</h5>
   <nav class="my-2 my-md-0 mr-md-3">
     <a *ngIf="isLoggedIn" class="p-2 text-dark">Snippets</a>
-    <a *ngIf="!isLoggedIn" class="p-2 text-dark" routerLinkActive="active" routerLink="/log-in">Sign
+    <a *ngIf="!isLoggedIn" class="p-2 text-dark" routerLinkActive="active" routerLink="/login">Sign
       in</a>
   </nav>
-  <a *ngIf="!isLoggedIn" class="btn btn-outline-primary" routerLinkActive="active"
-    routerLinkActive="active" routerLink="/sign-up">Sign up</a>
+  <a *ngIf="!isLoggedIn" class="btn btn-outline-primary"
+    routerLinkActive="active" routerLink="/signup">Sign up</a>
   <button (click)="logout()" *ngIf="isLoggedIn" type="button" class="btn btn-danger">Logout</button>
 </div>
 <router-outlet></router-outlet>

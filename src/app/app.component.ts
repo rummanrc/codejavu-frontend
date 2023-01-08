@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import { AuthService } from './services/auth/auth.service';
 import {Router} from "@angular/router";
 import {RouteService} from "./services/route/route.service";
@@ -8,13 +8,13 @@ import {RouteService} from "./services/route/route.service";
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  isLoggedIn: boolean = false;
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(private _authService: AuthService, private _router: Router) { }
   logout() {
-    this.authService.doLogout();
-    this.router.navigate([RouteService.LOGIN]);
+      this._authService.doLogout();
+      this._router.navigate([RouteService.LOGIN]).catch(err => console.log(err));
   }
-  ngOnInit() {
-    this.isLoggedIn = this.authService.isLoggedIn;
+  get isLoggedIn(): boolean {
+    return this._authService.isLoggedIn
   }
+  ngOnInit() { }
 }
