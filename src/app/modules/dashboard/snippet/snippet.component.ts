@@ -5,7 +5,7 @@ import {RestService} from "../../../services/rest/rest.service";
 import {RestRoute} from "../../../services/rest/rest-route";
 import {map} from "rxjs";
 @Component({
-  selector: 'app-snippet',
+  selector: 'app-dashboard',
   templateUrl: './snippet.component.html',
   styleUrls: ['./snippet.component.css'],
 })

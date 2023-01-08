@@ -8,7 +8,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {RestService} from "./services/rest/rest.service";
 import {AuthService} from "./services/auth/auth.service";
 import {LoginModule} from "./modules/login/login.module";
-import {SnippetModule} from "./modules/snippet/snippet.module";
+import {DashboardModule} from "./modules/dashboard/dashboard.module";
 import {RouteService} from "./services/route/route.service";
 
 @NgModule({
@@ -22,7 +22,7 @@ import {RouteService} from "./services/route/route.service";
     ReactiveFormsModule,
     BrowserAnimationsModule,
     LoginModule,
-    SnippetModule
+    DashboardModule
   ],
   providers: [
     RestService,

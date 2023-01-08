@@ -1,14 +1,15 @@
 import {Component, OnInit} from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { AuthService } from '../../../services/auth/auth.service';
 import { Router } from '@angular/router';
+import {AuthService} from "../../../services/auth/auth.service";
 import {RouteService} from "../../../services/route/route.service";
+
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css'],
+  selector: 'app-sign-in',
+  templateUrl: './sign-in.component.html',
+  styleUrls: ['./sign-in.component.css'],
 })
-export class LoginComponent implements OnInit {
+export class SignInComponent implements OnInit {
   loginForm: FormGroup;
   constructor(
     private _fb: FormBuilder,
@@ -29,6 +30,6 @@ export class LoginComponent implements OnInit {
       error: (msg) => {
         console.log('Error Log in: ', msg);
       }
-  });
+    });
   }
 }
