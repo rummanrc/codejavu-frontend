@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {RestService} from "../../../services/rest/rest.service";
-import {RestRoute} from "../../../services/rest/rest-route";
+import {RestAPIs} from "../../../services/rest/restAPIs";
+import {catchError, map, Observable} from "rxjs";
 @Component({
   selector: 'app-dashboard',
   templateUrl: './snippet.component.html',
@@ -9,26 +10,50 @@ import {RestRoute} from "../../../services/rest/rest-route";
 export class SnippetComponent implements OnInit {
   snippets: any;
   private _modalActive: boolean = false;
-  private _codeStr: string = "";
-  constructor(
-    private _rest: RestService,
-  ) { }
+  private _snippet: Snippet = {};
+  constructor(private _rest: RestService) {
+
+  }
   get isModalActive(): boolean {
     return this._modalActive;
   }
-  get codeStr(): string {
-    return this._codeStr;
+  get snippet() : Snippet {
+    return this._snippet;
   }
-  showCodeSnippet(): void {
-    this._codeStr = "acjbasjhcba"; //TODO: fetch the code snippet and show
+  showCodeSnippet(snippetId: number): void {
+    this.loadSnippet(snippetId).subscribe( {
+      next: data => {
+        this._snippet = data;
+      },
+      error: err => {
+        //No-op
+      }
+    });
     this._modalActive = true;
   }
   closeSnippetModal(): void {
-    this._codeStr = "";
+    this._snippet = {};
     this._modalActive = false;
   }
+  private loadSnippet(id: number): Observable<Snippet> {
+    const api = this._rest.url(`${RestAPIs.SNIPPETS}/${id}`);
+    return this._rest.get<any>(api).pipe(
+      map( (data) => {
+        return { id: data.id,
+          title: data.title,
+          snippet: data.snippet,
+          language: data.language,
+          urls: data.urls,
+          tags: data.tags
+        } as Snippet
+      }),
+      catchError( (err) => {
+        throw  err;
+      })
+    )
+  }
   ngOnInit() {
-    let api = this._rest.url(RestRoute.SNIPPETS);
+    let api = this._rest.url(RestAPIs.SNIPPETS);
     this._rest.get(api).subscribe({
       next: value => {
         this.snippets = value;
@@ -39,3 +64,12 @@ export class SnippetComponent implements OnInit {
     })
   }
 }
+export interface Snippet {
+  id?: number,
+  title?: string,
+  snippet?: string,
+  language?: string,
+  urls?: string[],
+  tags?: string[]
+}
+
