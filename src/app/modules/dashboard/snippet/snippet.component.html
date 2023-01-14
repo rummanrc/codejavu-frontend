@@ -1,3 +1,9 @@
+<app-snippet-create-dialog
+  [modalActive] = "isModalActive"
+  [codeStr] = "codeStr"
+  (modalDeactivateEvent)="closeSnippetModal()"
+>
+</app-snippet-create-dialog>
 <div class="pt-2">
   <!-- Top Bar -->
   <div class="level">
@@ -76,7 +82,7 @@
     </thead>
     <tbody>
     <tr *ngFor="let snippet of snippets">
-      <td>{{snippet.title}}</td>
+      <td class="is-clickable" (click)="showCodeSnippet()">{{snippet.title}}</td>
       <td>{{snippet.language}}</td>
       <td><i class="fa-solid fa-file-export"></i></td>
       <td>{{snippet.date}}</td>

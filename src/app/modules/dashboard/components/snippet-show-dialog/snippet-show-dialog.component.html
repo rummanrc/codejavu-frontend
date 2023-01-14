@@ -1,0 +1,30 @@
+<div class="modal" [ngClass]="isModalActive? 'is-active': '' ">
+  <div class="modal-background"></div>
+  <div class="modal-card container is-fluid">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Modal title</p>
+      <button class="delete" aria-label="close" (click)="closeSnippetModal()"></button>
+    </header>
+    <section class="modal-card-body">
+      <!-- Content ... -->
+      <pre>
+
+      </pre>
+    </section>
+    <footer class="modal-card-foot">
+      <button class="button is-success" (click)="copyCodeClipboard()">
+        <span class="icon is-small">
+          <i class="fa-regular fa-clipboard"></i>
+        </span>
+        <span>Copy</span>
+      </button>
+      <button class="button" (click)="closeSnippetModal()" >Cancel</button>
+      <button class="button is-danger is-right">
+        <span class="icon is-small">
+          <i class="fa-solid fa-trash"></i>
+        </span>
+        <span>Delete</span>
+      </button>
+    </footer>
+  </div>
+</div>
