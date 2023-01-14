@@ -1,7 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-
-const routes: Routes = [];
+import {RouteService} from "./services/route/route.service";
+const routes: Routes = [
+  // { path: '*', redirectTo: RouteService.SNIPPETS },
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
