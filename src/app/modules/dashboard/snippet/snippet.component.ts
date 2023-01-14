@@ -1,29 +1,75 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { AuthService } from '../../../services/auth/auth.service';
 import {RestService} from "../../../services/rest/rest.service";
-import {RestRoute} from "../../../services/rest/rest-route";
-import {map} from "rxjs";
+import {RestAPIs} from "../../../services/rest/restAPIs";
+import {catchError, map, Observable} from "rxjs";
 @Component({
   selector: 'app-dashboard',
   templateUrl: './snippet.component.html',
   styleUrls: ['./snippet.component.css'],
 })
 export class SnippetComponent implements OnInit {
-  snippets: any[] = [];
-  constructor(
-    private authService: AuthService,
-    private _rest: RestService,
-    private actRoute: ActivatedRoute
-  ) {
-    let id = this.actRoute.snapshot.paramMap.get('id');
-    let api = _rest.url(RestRoute.SNIPPETS);
-      _rest.get(api).pipe(
-        map((res) => {
-                this.snippets.push(res);
-        })
-      )
-    console.log(this.snippets)
+  snippets: any;
+  private _modalActive: boolean = false;
+  private _snippet: Snippet = {};
+  constructor(private _rest: RestService) {
+
   }
-  ngOnInit() {}
+  get isModalActive(): boolean {
+    return this._modalActive;
+  }
+  get snippet() : Snippet {
+    return this._snippet;
+  }
+  showCodeSnippet(snippetId: number): void {
+    this.loadSnippet(snippetId).subscribe( {
+      next: data => {
+        this._snippet = data;
+      },
+      error: err => {
+        //No-op
+      }
+    });
+    this._modalActive = true;
+  }
+  closeSnippetModal(): void {
+    this._snippet = {};
+    this._modalActive = false;
+  }
+  private loadSnippet(id: number): Observable<Snippet> {
+    const api = this._rest.url(`${RestAPIs.SNIPPETS}/${id}`);
+    return this._rest.get<any>(api).pipe(
+      map( (data) => {
+        return { id: data.id,
+          title: data.title,
+          snippet: data.snippet,
+          language: data.language,
+          urls: data.urls,
+          tags: data.tags
+        } as Snippet
+      }),
+      catchError( (err) => {
+        throw  err;
+      })
+    )
+  }
+  ngOnInit() {
+    let api = this._rest.url(RestAPIs.SNIPPETS);
+    this._rest.get(api).subscribe({
+      next: value => {
+        this.snippets = value;
+      },
+      error: err => {
+        //No-op
+      }
+    })
+  }
 }
+export interface Snippet {
+  id?: number,
+  title?: string,
+  snippet?: string,
+  language?: string,
+  urls?: string[],
+  tags?: string[]
+}
+
