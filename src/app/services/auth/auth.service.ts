@@ -10,19 +10,9 @@ import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from "@angular/com
   providedIn: 'root',
 })
 
-export class AuthService implements HttpInterceptor{
+export class AuthService {
   constructor(private _rest: RestService, public router: Router) {}
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const authToken = this.getToken();
-    req = req.clone({
-      setHeaders: {
-        Authorization: "Bearer " + authToken,
-        Accept: "application/json" // TODO: It will cause problem  if any external api doesnt accept json
-      }
-    });
 
-    return next.handle(req);
-  }
 
   signUp(user: User): Observable<any> {
     let api = this._rest.url(RestRoute.USERS);
