@@ -3,8 +3,8 @@ import {User} from './user';
 import {BehaviorSubject, catchError, map, Observable, share, tap} from 'rxjs';
 import {Router} from '@angular/router';
 import {RestService} from "../rest/rest.service";
-import {RestRoute} from "../rest/rest-route";
 import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from "@angular/common/http";
+import {RestAPIs} from "../rest/restAPIs";
 
 @Injectable({
   providedIn: 'root',
@@ -15,13 +15,13 @@ export class AuthService {
 
 
   signUp(user: User): Observable<any> {
-    let api = this._rest.url(RestRoute.USERS);
+    let api = this._rest.url(RestAPIs.SIGN_UP);
     return this._rest.post(api, user);
   }
 
   logIn(user: User): Observable<AuthenticationData> {
     const request_body = {'email': user.email, 'password': user.password};
-    const api = this._rest.url(RestRoute.LOGIN);
+    const api = this._rest.url(RestAPIs.LOGIN);
     return this._rest.post<any>(api, request_body).pipe(
       map( (data) => {
         return {token: data.token, userId: data.user_id} as AuthenticationData
