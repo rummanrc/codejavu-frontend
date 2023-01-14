@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {RestService} from "../../../services/rest/rest.service";
-import {RestAPIs} from "../../../services/rest/restAPIs";
-import {catchError, map, Observable} from "rxjs";
+import { RestService } from "../../../services/rest/rest.service";
+import { RestAPIs } from "../../../services/rest/restAPIs";
+import { catchError, map, Observable } from "rxjs";
 @Component({
   selector: 'app-dashboard',
   templateUrl: './snippet.component.html',
@@ -11,15 +11,27 @@ export class SnippetComponent implements OnInit {
   snippets: any;
   private _modalActive: boolean = false;
   private _snippet: Snippet = {};
-  constructor(private _rest: RestService) {
+  constructor(private _rest: RestService) {}
 
-  }
   get isModalActive(): boolean {
     return this._modalActive;
   }
-  get snippet() : Snippet {
+  get snippet(): Snippet {
     return this._snippet;
   }
+
+  ngOnInit(): void {
+    let api = this._rest.url(RestAPIs.SNIPPETS);
+    this._rest.get(api).subscribe({
+      next: value => {
+        this.snippets = value;
+      },
+      error: err => {
+        //No-op
+      }
+    });
+  }
+
   showCodeSnippet(snippetId: number): void {
     this.loadSnippet(snippetId).subscribe( {
       next: data => {
@@ -45,23 +57,12 @@ export class SnippetComponent implements OnInit {
           language: data.language,
           urls: data.urls,
           tags: data.tags
-        } as Snippet
+        } as Snippet;
       }),
       catchError( (err) => {
         throw  err;
       })
-    )
-  }
-  ngOnInit() {
-    let api = this._rest.url(RestAPIs.SNIPPETS);
-    this._rest.get(api).subscribe({
-      next: value => {
-        this.snippets = value;
-      },
-      error: err => {
-        //No-op
-      }
-    })
+    );
   }
 }
 export interface Snippet {

@@ -8,7 +8,7 @@ import {RouteService} from "../../services/route/route.service";
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
   loginForm: FormGroup;
   constructor(
     private _fb: FormBuilder,
@@ -20,11 +20,10 @@ export class LoginComponent implements OnInit {
       password: [''],
     });
   }
-  ngOnInit() {}
-  loginUser() {
+  loginUser(): void {
     this._auth.logIn(this.loginForm.value).subscribe({
       next: (token) => {
-        this._router.navigate([RouteService.SNIPPETS]).catch(err => console.log(err))
+        this._router.navigate([RouteService.SNIPPETS]).catch(err => console.log(err));
       },
       error: (msg) => {
         console.log('Error Log in: ', msg);

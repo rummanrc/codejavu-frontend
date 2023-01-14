@@ -1,15 +1,15 @@
-import {Component, OnInit} from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
-import {AuthService} from "../../../services/auth/auth.service";
-import {RouteService} from "../../../services/route/route.service";
+import { AuthService } from "../../../services/auth/auth.service";
+import { RouteService } from "../../../services/route/route.service";
 
 @Component({
   selector: 'app-sign-in',
   templateUrl: './sign-in.component.html',
   styleUrls: ['./sign-in.component.css'],
 })
-export class SignInComponent implements OnInit {
+export class SignInComponent {
   loginForm: FormGroup;
   constructor(
     private _fb: FormBuilder,
@@ -21,11 +21,10 @@ export class SignInComponent implements OnInit {
       password: [''],
     });
   }
-  ngOnInit() {}
-  loginUser() {
+  loginUser(): void {
     this._auth.logIn(this.loginForm.value).subscribe({
       next: (token) => {
-        this._router.navigate([RouteService.SNIPPETS]).catch(err => console.log(err))
+        this._router.navigate([RouteService.SNIPPETS]).catch(err => console.log(err));
       },
       error: (msg) => {
         console.log('Error Log in: ', msg);

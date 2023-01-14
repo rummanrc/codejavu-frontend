@@ -9,7 +9,7 @@ import {Snippet} from "../../snippet/snippet.component";
   templateUrl: './snippet-show-dialog.component.html',
   styleUrls: ['./snippet-show-dialog.component.css']
 })
-export class SnippetCreateDialogComponent implements OnInit {
+export class SnippetCreateDialogComponent {
   @Input() modalActive: boolean = false;
   @Input() snippet: Snippet = {};
   @Output() modalDeactivateEvent = new EventEmitter<boolean>();
@@ -17,16 +17,16 @@ export class SnippetCreateDialogComponent implements OnInit {
   constructor(private _clipboard: Clipboard, private _rest: RestService) {
   }
   get isModalActive(): boolean {
-    return this.modalActive
+    return this.modalActive;
   }
 
-  closeSnippetModal() {
+  closeSnippetModal(): void {
       this.modalDeactivateEvent.emit(false);
   }
-  copyCodeClipboard(){
+  copyCodeClipboard(): void {
     const pending = this._clipboard.beginCopy(this.snippet.snippet?this.snippet.snippet: "");
     let remainingAttempts = 3;
-    const attempt = () => {
+    const attempt = (): void => {
       const result = pending.copy();
       if (!result && --remainingAttempts) {
         setTimeout(attempt);
@@ -37,8 +37,7 @@ export class SnippetCreateDialogComponent implements OnInit {
     };
     attempt();
   }
-  deleteCodeSnippet() {
+  deleteCodeSnippet(): void {
     // TODO: delete code snippetss
   }
-  ngOnInit(): void {}
 }

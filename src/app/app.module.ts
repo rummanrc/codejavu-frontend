@@ -2,14 +2,14 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import {HTTP_INTERCEPTORS, HttpClientModule, HttpHandler} from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule, HttpHandler } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {RestService} from "./services/rest/rest.service";
-import {AuthService} from "./services/auth/auth.service";
-import {LoginModule} from "./modules/login/login.module";
-import {DashboardModule} from "./modules/dashboard/dashboard.module";
-import {RouteService} from "./services/route/route.service";
+import { RestService } from "./services/rest/rest.service";
+import { AuthService } from "./services/auth/auth.service";
+import { LoginModule } from "./modules/login/login.module";
+import { DashboardModule } from "./modules/dashboard/dashboard.module";
+import { RouteService } from "./services/route/route.service";
 
 @NgModule({
   declarations: [
@@ -41,6 +41,6 @@ import {RouteService} from "./services/route/route.service";
   bootstrap: [AppComponent]
 })
 export class AppModule { }
-export function restServiceFactory(httpHandler:HttpHandler){
+export function restServiceFactory(httpHandler: HttpHandler): RestService{
   return new RestService(httpHandler);
 }
