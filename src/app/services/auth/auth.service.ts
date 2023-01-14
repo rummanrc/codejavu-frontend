@@ -1,10 +1,9 @@
-import {Injectable} from '@angular/core';
-import {User} from './user';
-import {BehaviorSubject, catchError, map, Observable, share, tap} from 'rxjs';
-import {Router} from '@angular/router';
-import {RestService} from "../rest/rest.service";
-import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from "@angular/common/http";
-import {RestAPIs} from "../rest/restAPIs";
+import { Injectable } from '@angular/core';
+import { User } from './user';
+import { catchError, map, Observable, tap} from 'rxjs';
+import { Router } from '@angular/router';
+import { RestService } from "../rest/rest.service";
+import { RestAPIs } from "../rest/restAPIs";
 
 @Injectable({
   providedIn: 'root',
@@ -13,6 +12,13 @@ import {RestAPIs} from "../rest/restAPIs";
 export class AuthService {
   constructor(private _rest: RestService, public router: Router) {}
 
+  get isLoggedIn(): boolean {
+    return !!this.getToken();
+  }
+
+  getToken(): string|null {
+    return localStorage.getItem('token');
+  }
 
   signUp(user: User): Observable<any> {
     let api = this._rest.url(RestAPIs.SIGN_UP);
@@ -24,7 +30,7 @@ export class AuthService {
     const api = this._rest.url(RestAPIs.LOGIN);
     return this._rest.post<any>(api, request_body).pipe(
       map( (data) => {
-        return {token: data.token, userId: data.user_id} as AuthenticationData
+        return {token: data.token, userId: data.user_id} as AuthenticationData;
       }),
       tap( (authData) => {
         this.storeData(authData);
@@ -32,8 +38,14 @@ export class AuthService {
       catchError( (err) => {
         throw  err;
       })
-    )
+    );
   }
+
+  doLogout(): void {
+    this.clearLocalStorage();
+    //TODO: call backend logout
+  }
+
   private storeData(data: AuthenticationData): void {
     localStorage.setItem('token', data.token);
     localStorage.setItem('user-id', data.userId.toString());
@@ -42,16 +54,6 @@ export class AuthService {
   private clearLocalStorage(): void {
     localStorage.removeItem('token');
     localStorage.removeItem('user-id');
-  }
-  doLogout() {
-    this.clearLocalStorage();
-    //TODO: call backend logout
-  }
-  getToken(): string|null {
-    return localStorage.getItem('token');
-  }
-  get isLoggedIn(): boolean {
-    return !!this.getToken();
   }
 }
 

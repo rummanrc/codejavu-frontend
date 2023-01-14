@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
   templateUrl: '/signup.component.html',
   styleUrls: ['./signup.component.css'],
 })
-export class SignupComponent implements OnInit {
+export class SignupComponent {
   signupForm: FormGroup;
   constructor(
     public fb: FormBuilder,
@@ -21,8 +21,7 @@ export class SignupComponent implements OnInit {
       password: [''],
     });
   }
-  ngOnInit() {}
-  registerUser() {
+  registerUser(): void {
     this.authService.signUp(this.signupForm.value).subscribe((res) => {
       if (res.result) {
         this.signupForm.reset();
