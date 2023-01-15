@@ -13,8 +13,9 @@ export class SnippetCreateDialogComponent {
   @Input() modalActive: boolean = false;
   @Input() snippet: Snippet = {};
   @Output() modalDeactivateEvent = new EventEmitter<boolean>();
+  @Output() editCodeSnippetEvent = new EventEmitter<Snippet>();
 
-  constructor(private _clipboard: Clipboard, private _rest: RestService) {
+  constructor(private _clipboard: Clipboard) {
   }
   get isModalActive(): boolean {
     return this.modalActive;
@@ -37,6 +38,11 @@ export class SnippetCreateDialogComponent {
     };
     attempt();
   }
+
+  editCodeSnippet(): void {
+    this.editCodeSnippetEvent.emit(this.snippet);
+  }
+
   deleteCodeSnippet(): void {
     // TODO: delete code snippetss
   }

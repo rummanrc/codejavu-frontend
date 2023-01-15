@@ -28,25 +28,18 @@
 
     </section>
     <footer class="modal-card-foot">
-      <button class="button is-success" (click)="copyCodeClipboard()">
+      <button class="button is-success" (click)="saveCodeSnippet()">
         <span class="icon is-small">
           <i class="fa-regular fa-clipboard"></i>
         </span>
-        <span>Copy</span>
+        <span>Save</span>
       </button>
-      <button class="button is-warning" (click)="editCodeSnippet()">
-        <span class="icon is-small">
-               <i class="fa-solid fa-file-pen"></i>
-        </span>
-        <span>Edit</span>
-      </button>
-
       <button class="button" (click)="closeSnippetModal()" >Cancel</button>
-      <button class="button is-danger is-right" (click)="deleteCodeSnippet()">
+      <button class="button is-danger is-right" (click)="clearSnippet()">
         <span class="icon is-small">
-          <i class="fa-solid fa-trash"></i>
+          <i class="fa-solid fa-delete-left"></i>
         </span>
-        <span>Delete</span>
+        <span>Clear</span>
       </button>
     </footer>
   </div>

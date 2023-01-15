@@ -1,0 +1,15 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+local_branch_name="$(git rev-parse --abbrev-ref HEAD)"
+
+valid_branch_regex='^((fix|feat)\/[a-zA-Z0-9\-]+)$'
+
+message="invalid branch name"
+
+if [[ ! $local_branch_name =~ $valid_branch_regex ]]; then
+    echo "$message"
+    exit 1
+fi
+
+exit 0

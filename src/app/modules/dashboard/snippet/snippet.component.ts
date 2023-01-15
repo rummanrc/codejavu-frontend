@@ -10,11 +10,15 @@ import { catchError, map, Observable } from "rxjs";
 export class SnippetComponent implements OnInit {
   snippets: any;
   private _modalActive: boolean = false;
+  private _modalCreateEditActive: boolean = false;
   private _snippet: Snippet = {};
   constructor(private _rest: RestService) {}
 
   get isModalActive(): boolean {
     return this._modalActive;
+  }
+  get isModalCreateEditActive(): boolean {
+    return this._modalCreateEditActive;
   }
   get snippet(): Snippet {
     return this._snippet;
@@ -43,9 +47,19 @@ export class SnippetComponent implements OnInit {
     });
     this._modalActive = true;
   }
+  showAddEditCodeSnippet(snippet?: Snippet): void {
+    this.closeSnippetModal();
+    if(snippet !== undefined){
+      this._snippet = snippet
+    }
+    this._modalCreateEditActive = true;
+  }
   closeSnippetModal(): void {
     this._snippet = {};
     this._modalActive = false;
+  }
+  closeSnippetCreateEditModal(): void {
+    this._modalCreateEditActive = false;
   }
   private loadSnippet(id: number): Observable<Snippet> {
     const api = this._rest.url(`${RestAPIs.SNIPPETS}/${id}`);
