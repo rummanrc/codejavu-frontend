@@ -9,15 +9,44 @@ import { catchError, map, Observable } from "rxjs";
 })
 export class SnippetComponent implements OnInit {
   snippets: any;
+  private _languages: Language[] = []
+  private _tags: Tag[] = []
   private _modalActive: boolean = false;
+  private _modalCreateEditActive: boolean = false;
   private _snippet: Snippet = {};
-  constructor(private _rest: RestService) {}
+  constructor(private _rest: RestService){
+    this.loadLanguageList().subscribe({
+      next: (languageData) => {
+        this._languages = languageData;
+      },
+      error: (err) => {
+        //No-op
+      }
+    });
+    this.loadTagList().subscribe({
+      next: (tagData) => {
+        this._tags = tagData;
+      },
+      error: (err) => {
+        //No-op
+      }
+    });
+  }
 
   get isModalActive(): boolean {
     return this._modalActive;
   }
+  get isModalCreateEditActive(): boolean {
+    return this._modalCreateEditActive;
+  }
   get snippet(): Snippet {
     return this._snippet;
+  }
+  get languages(): Language[] {
+    return this._languages;
+  }
+  get tags(): Tag[] {
+    return this._tags;
   }
 
   ngOnInit(): void {
@@ -43,9 +72,28 @@ export class SnippetComponent implements OnInit {
     });
     this._modalActive = true;
   }
+  showAddEditCodeSnippet(snippet?: Snippet): void {
+    this.closeSnippetModal();
+    if(snippet !== undefined){
+      this._snippet = snippet
+    } else {
+      this._snippet = {
+        title: "Untitled",
+        snippet: ``,
+        tags: [],
+        urls: [],
+        language: ""
+      };
+    }
+    this._modalCreateEditActive = true;
+  }
   closeSnippetModal(): void {
     this._snippet = {};
     this._modalActive = false;
+  }
+  closeSnippetCreateEditModal(): void {
+    this._modalCreateEditActive = false;
+    this._snippet = {};
   }
   private loadSnippet(id: number): Observable<Snippet> {
     const api = this._rest.url(`${RestAPIs.SNIPPETS}/${id}`);
@@ -64,6 +112,28 @@ export class SnippetComponent implements OnInit {
       })
     );
   }
+  private loadLanguageList(): Observable<Language[]> {
+    const api = this._rest.url(RestAPIs.LANGUAGES);
+    return this._rest.get<any>(api).pipe(
+      map( (data) => {
+        return data as Language[];
+      }),
+      catchError((err) => {
+        throw err;
+      })
+    );
+  }
+  private loadTagList(): Observable<Tag[]> {
+    const api = this._rest.url(RestAPIs.TAGS);
+    return this._rest.get<any>(api).pipe(
+      map( (data) => {
+        return data as Tag[];
+      }),
+      catchError((err) => {
+        throw err;
+      })
+    );
+  }
 }
 export interface Snippet {
   id?: number,
@@ -72,5 +142,14 @@ export interface Snippet {
   language?: string,
   urls?: string[],
   tags?: string[]
+}
+
+export interface Language {
+  id: number,
+  name: string
+}
+export interface Tag {
+  id: number,
+  name: string
 }
 

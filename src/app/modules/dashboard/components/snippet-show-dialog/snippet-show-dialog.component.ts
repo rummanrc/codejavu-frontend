@@ -1,8 +1,5 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {Clipboard} from '@angular/cdk/clipboard';
-import {catchError, map, Observable, tap} from "rxjs";
-import {RestAPIs} from "../../../../services/rest/restAPIs";
-import {RestService} from "../../../../services/rest/rest.service";
 import {Snippet} from "../../snippet/snippet.component";
 @Component({
   selector: 'app-snippet-show-dialog',
@@ -13,8 +10,9 @@ export class SnippetCreateDialogComponent {
   @Input() modalActive: boolean = false;
   @Input() snippet: Snippet = {};
   @Output() modalDeactivateEvent = new EventEmitter<boolean>();
+  @Output() editCodeSnippetEvent = new EventEmitter<Snippet>();
 
-  constructor(private _clipboard: Clipboard, private _rest: RestService) {
+  constructor(private _clipboard: Clipboard) {
   }
   get isModalActive(): boolean {
     return this.modalActive;
@@ -37,6 +35,11 @@ export class SnippetCreateDialogComponent {
     };
     attempt();
   }
+
+  editCodeSnippet(): void {
+    this.editCodeSnippetEvent.emit(this.snippet);
+  }
+
   deleteCodeSnippet(): void {
     // TODO: delete code snippetss
   }

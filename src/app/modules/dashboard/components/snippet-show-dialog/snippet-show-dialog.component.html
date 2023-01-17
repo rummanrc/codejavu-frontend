@@ -9,8 +9,7 @@
       <!-- Content ... -->
       <div class="columns">
         <div class="column is-10">
-          <pre>
-            {{snippet.snippet}}
+          <pre highlight [code]="snippet.snippet">
           </pre>
         </div>
         <div class="column">
@@ -34,6 +33,13 @@
         </span>
         <span>Copy</span>
       </button>
+      <button class="button is-warning" (click)="editCodeSnippet()">
+        <span class="icon is-small">
+               <i class="fa-solid fa-file-pen"></i>
+        </span>
+        <span>Edit</span>
+      </button>
+
       <button class="button" (click)="closeSnippetModal()" >Cancel</button>
       <button class="button is-danger is-right" (click)="deleteCodeSnippet()">
         <span class="icon is-small">
