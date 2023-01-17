@@ -6,6 +6,9 @@ import {SnippetComponent} from "./snippet/snippet.component";
 import { DashboardComponent } from './dashboard.component';
 import { SnippetCreateDialogComponent } from './components/snippet-show-dialog/snippet-show-dialog.component';
 import { SnippetCreateEditDialogComponent } from './components/snippet-create-edit-dialog/snippet-create-edit-dialog.component';
+import { HighlighterComponent } from './components/highlighter/highlighter.component';
+import {FormsModule} from "@angular/forms";
+import { EditorComponent } from './components/editor/editor.component';
 
 
 @NgModule({
@@ -13,11 +16,14 @@ import { SnippetCreateEditDialogComponent } from './components/snippet-create-ed
     SnippetComponent,
     DashboardComponent,
     SnippetCreateDialogComponent,
-    SnippetCreateEditDialogComponent
+    SnippetCreateEditDialogComponent,
+    HighlighterComponent,
+    EditorComponent
   ],
   imports: [
     CommonModule,
-    DashboardRoutingModule
+    DashboardRoutingModule,
+    FormsModule,
   ]
 })
 export class DashboardModule { }

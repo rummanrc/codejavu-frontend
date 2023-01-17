@@ -2,39 +2,43 @@
   <div class="modal-background"></div>
   <div class="modal-card container is-fluid">
     <header class="modal-card-head">
-      <p class="modal-card-title">{{snippet.title}}</p>
+      <p class="modal-card-title">{{title}}</p>
       <button class="delete" aria-label="close" (click)="closeSnippetModal()"></button>
     </header>
     <section class="modal-card-body">
       <!-- Content ... -->
       <div class="columns">
         <div class="column is-10">
-          <pre>
-            {{snippet.snippet}}
+          <pre class="editor hljs" editor>
           </pre>
         </div>
         <div class="column">
           <div>
-            <p>
-              Language: {{snippet.language}}
-            </p>
-            <span>
-              <p> Tags: </p> <p *ngFor="let tag of snippet.tags">{{tag}}&#32;</p>
-            </span>
+            <input class="input mb-5" type="text" [(ngModel)]="title" placeholder="Snippet name">
+            <div class="select">
+              <select [(ngModel)]="langId">
 
+                <option *ngFor="let language of languages" value="{{language.id}}">{{language.name}}</option>
+              </select>
+            </div>
+            <div class="mt-6 select is-multiple">
+              <select [(ngModel)]="tagIds" multiple size="5">
+                <option *ngFor="let tag of tags" value="{{tag.id}}">{{tag.name}}</option>
+              </select>
+            </div>
           </div>
         </div>
       </div>
 
     </section>
     <footer class="modal-card-foot">
-      <button class="button is-success" (click)="saveCodeSnippet()">
+      <button type="submit" class="button is-success" (click)="saveCodeSnippet()">
         <span class="icon is-small">
           <i class="fa-regular fa-clipboard"></i>
         </span>
         <span>Save</span>
       </button>
-      <button class="button" (click)="closeSnippetModal()" >Cancel</button>
+      <button class="button" (click)="closeSnippetModal()">Cancel</button>
       <button class="button is-danger is-right" (click)="clearSnippet()">
         <span class="icon is-small">
           <i class="fa-solid fa-delete-left"></i>

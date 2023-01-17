@@ -1,8 +1,5 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {Clipboard} from '@angular/cdk/clipboard';
-import {catchError, map, Observable, tap} from "rxjs";
-import {RestAPIs} from "../../../../services/rest/restAPIs";
-import {RestService} from "../../../../services/rest/rest.service";
 import {Snippet} from "../../snippet/snippet.component";
 @Component({
   selector: 'app-snippet-show-dialog',
