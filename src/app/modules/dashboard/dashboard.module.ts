@@ -8,7 +8,7 @@ import { SnippetCreateDialogComponent } from './components/snippet-show-dialog/s
 import { SnippetCreateEditDialogComponent } from './components/snippet-create-edit-dialog/snippet-create-edit-dialog.component';
 import { HighlighterComponent } from './components/highlighter/highlighter.component';
 import {FormsModule} from "@angular/forms";
-import { EditorComponent } from './components/editor/editor.component';
+import { NgxCodeJarComponent } from './components/editor/NgxCodeJar.component';
 
 
 @NgModule({
@@ -18,7 +18,7 @@ import { EditorComponent } from './components/editor/editor.component';
     SnippetCreateDialogComponent,
     SnippetCreateEditDialogComponent,
     HighlighterComponent,
-    EditorComponent
+    NgxCodeJarComponent
   ],
   imports: [
     CommonModule,

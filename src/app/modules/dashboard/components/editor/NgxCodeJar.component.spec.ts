@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EditorComponent } from './editor.component';
+import { NgxCodeJarComponent } from './NgxCodeJar.component';
 
-describe('EditorComponent', () => {
-  let component: EditorComponent;
-  let fixture: ComponentFixture<EditorComponent>;
+describe('NgxCodeJarComponent', () => {
+  let component: NgxCodeJarComponent;
+  let fixture: ComponentFixture<NgxCodeJarComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ EditorComponent ]
+      declarations: [ NgxCodeJarComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(EditorComponent);
+    fixture = TestBed.createComponent(NgxCodeJarComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
