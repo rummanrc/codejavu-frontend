@@ -18,10 +18,13 @@ export class SnippetCreateEditDialogComponent implements OnChanges {
   @Output() modalDeactivateEvent = new EventEmitter<boolean>();
   title: string = "Untitled";
   langId: number = 0;
-  tagIds: number[] = [];
+  tag: Tag = { id: 0, name: ""};
+  tagListMap: Map<string, Tag> = new Map<string, Tag>();
+  tagList: Tag[] = [];
   urls: string[] = [];
   code: string = "";
 
+  url: string = "";
   constructor(private _rest: RestService) {
   }
 
@@ -34,13 +37,13 @@ export class SnippetCreateEditDialogComponent implements OnChanges {
   get isModalActive(): boolean {
     return this.modalActive;
   }
-
   saveCodeSnippet(): void {
+    const tagIds = this.getTagIds();
     const api = this._rest.url(RestAPIs.SNIPPETS);
     this._rest.post(api, { language_id: this.langId,
       title:this.title,
       snippet: this.code,
-      tags: this.tagIds,
+      tags: tagIds,
       urls: this.urls
     }).subscribe( {
       next: (data) => {
@@ -53,7 +56,13 @@ export class SnippetCreateEditDialogComponent implements OnChanges {
       }
     })
   }
-
+  getTagIds(): number[] {
+    let ids: number[] = [];
+    this.tagList.forEach( (tag) => {
+      ids.push(tag.id);
+    })
+    return ids;
+  }
   closeSnippetModal(): void {
     this.modalDeactivateEvent.emit(false);
   }
@@ -65,5 +74,44 @@ export class SnippetCreateEditDialogComponent implements OnChanges {
     if( editor.textContent!== null && editor.textContent !== undefined){
       editor.innerHTML = hljs.highlightAuto(editor.textContent).value;
     }
+  }
+  addUrlList(): void {
+    if(!!this.url){
+      this.urls.push(this.url);
+      this.urls = [...new Set(this.urls)];
+      this.url = "";
+    }
+  }
+
+  truncate(str: string): string {
+    return str.slice(0, 20) + "\u2026"
+  }
+
+  removeUrlfromList(str: string): void {
+    const index = this.urls.indexOf(str);
+    this.urls.splice(index,1);
+  }
+
+  addTagList(): void {
+    if(!!this.tag && this.tag.id !== 0){
+      const hash = this.createTagHash(this.tag);
+      this.tagListMap.set(hash, this.tag);
+      this.populateTagList();
+    }
+  }
+  createTagHash(tag: Tag): string {
+    return `${tag.id}${tag.name}`;
+  }
+
+  removeTagFromTagList(tag: Tag) {
+    this.tagListMap.delete(this.createTagHash(tag));
+    this.populateTagList();
+  }
+
+  private populateTagList() {
+    this.tagList = [];
+    this.tagListMap.forEach((value: Tag) => {
+      this.tagList.push(value);
+    });
   }
 }
