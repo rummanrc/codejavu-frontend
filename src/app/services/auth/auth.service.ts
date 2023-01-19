@@ -3,7 +3,7 @@ import { User } from './user';
 import { catchError, map, Observable, tap} from 'rxjs';
 import { Router } from '@angular/router';
 import { RestService } from "../rest/rest.service";
-import { RestAPIs } from "../rest/restAPIs";
+import { restAPI } from "../../constants";
 
 @Injectable({
   providedIn: 'root',
@@ -21,13 +21,13 @@ export class AuthService {
   }
 
   signUp(user: User): Observable<any> {
-    let api = this._rest.url(RestAPIs.SIGN_UP);
+    let api = this._rest.url(restAPI.SIGN_UP);
     return this._rest.post(api, user);
   }
 
   logIn(user: User): Observable<AuthenticationData> {
     const request_body = {'email': user.email, 'password': user.password};
-    const api = this._rest.url(RestAPIs.LOGIN);
+    const api = this._rest.url(restAPI.LOGIN);
     return this._rest.post<any>(api, request_body).pipe(
       map( (data) => {
         return {token: data.token, userId: data.user_id} as AuthenticationData;

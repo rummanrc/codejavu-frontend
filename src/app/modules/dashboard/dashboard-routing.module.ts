@@ -1,16 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import {RouteService} from "../../services/route/route.service";
 import {SnippetComponent} from "./snippet/snippet.component";
 import {AuthGuard} from "../../services/auth/auth.guard";
+import {route} from "../../constants";
 
 const routes: Routes = [
   {
-    path: RouteService.SNIPPETS,
+    path: route.SNIPPETS,
     component: SnippetComponent,
     canActivate: [AuthGuard]
   },
-  { path: '**', redirectTo: RouteService.SNIPPETS}
+  { path: '**', redirectTo: route.SNIPPETS}
 ];
 
 @NgModule({

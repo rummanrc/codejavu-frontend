@@ -1,9 +1,9 @@
 import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {Language, Snippet, Tag} from "../../snippet/snippet.component";
 import {RestService} from "../../../../services/rest/rest.service";
-import {RestAPIs} from "../../../../services/rest/restAPIs";
 import {CodeJarContainer} from "../editor/NgxCodeJar.component";
 import hljs from "highlight.js";
+import {restAPI} from "../../../../constants";
 
 @Component({
   selector: 'app-snippet-create-edit-dialog',
@@ -39,7 +39,7 @@ export class SnippetCreateEditDialogComponent implements OnChanges {
   }
   saveCodeSnippet(): void {
     const tagIds = this.getTagIds();
-    const api = this._rest.url(RestAPIs.SNIPPETS);
+    const api = this._rest.url(restAPI.SNIPPETS);
     this._rest.post(api, { language_id: this.langId,
       title:this.title,
       snippet: this.code,

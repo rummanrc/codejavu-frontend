@@ -5,9 +5,8 @@ import { Observable } from "rxjs";
 @Injectable({
   providedIn: 'root'
 })
-export class RestService extends HttpClient implements HttpInterceptor {
-  constructor(httpHandler: HttpHandler) {
-    super(httpHandler);
+export class RestService implements HttpInterceptor {
+  constructor(private http: HttpClient) {
   }
 
   url(path: string): string {
@@ -25,5 +24,13 @@ export class RestService extends HttpClient implements HttpInterceptor {
       }
     });
     return next.handle(req);
+  }
+
+  post<T>(api: string, body: any|null) {
+    return this.http.post<T>(api,body);
+  }
+
+  get<T>(api: string) {
+    return this.http.get<T>(api);
   }
 }
