@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from "../../../services/auth/auth.service";
-import { RouteService } from "../../../services/route/route.service";
+import {route} from "../../../constants";
 
 @Component({
   selector: 'app-sign-in',
@@ -24,7 +24,7 @@ export class SignInComponent {
   loginUser(): void {
     this._auth.logIn(this.loginForm.value).subscribe({
       next: (token) => {
-        this._router.navigate([RouteService.SNIPPETS]).catch(err => console.log(err));
+        this._router.navigate([route.SNIPPETS]).catch(err => console.log(err));
       },
       error: (msg) => {
         console.log('Error Log in: ', msg);

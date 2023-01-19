@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { AuthService } from '../../services/auth/auth.service';
 import { Router } from '@angular/router';
-import {RouteService} from "../../services/route/route.service";
+import {route} from "../../constants";
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -23,7 +23,7 @@ export class LoginComponent {
   loginUser(): void {
     this._auth.logIn(this.loginForm.value).subscribe({
       next: (token) => {
-        this._router.navigate([RouteService.SNIPPETS]).catch(err => console.log(err));
+        this._router.navigate([route.SNIPPETS]).catch(err => console.log(err));
       },
       error: (msg) => {
         console.log('Error Log in: ', msg);

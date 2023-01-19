@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RestService } from "../../../services/rest/rest.service";
-import { RestAPIs } from "../../../services/rest/restAPIs";
 import { catchError, map, Observable } from "rxjs";
+import {restAPI} from "../../../constants";
 @Component({
   selector: 'app-dashboard',
   templateUrl: './snippet.component.html',
@@ -50,7 +50,7 @@ export class SnippetComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    let api = this._rest.url(RestAPIs.SNIPPETS);
+    let api = this._rest.url(restAPI.SNIPPETS);
     this._rest.get(api).subscribe({
       next: value => {
         this.snippets = value;
@@ -96,7 +96,7 @@ export class SnippetComponent implements OnInit {
     this._snippet = {};
   }
   private loadSnippet(id: number): Observable<Snippet> {
-    const api = this._rest.url(`${RestAPIs.SNIPPETS}/${id}`);
+    const api = this._rest.url(`${restAPI.SNIPPETS}/${id}`);
     return this._rest.get<any>(api).pipe(
       map( (data) => {
         return { id: data.id,
@@ -113,7 +113,7 @@ export class SnippetComponent implements OnInit {
     );
   }
   private loadLanguageList(): Observable<Language[]> {
-    const api = this._rest.url(RestAPIs.LANGUAGES);
+    const api = this._rest.url(restAPI.LANGUAGES);
     return this._rest.get<any>(api).pipe(
       map( (data) => {
         return data as Language[];
@@ -124,7 +124,7 @@ export class SnippetComponent implements OnInit {
     );
   }
   private loadTagList(): Observable<Tag[]> {
-    const api = this._rest.url(RestAPIs.TAGS);
+    const api = this._rest.url(restAPI.TAGS);
     return this._rest.get<any>(api).pipe(
       map( (data) => {
         return data as Tag[];
