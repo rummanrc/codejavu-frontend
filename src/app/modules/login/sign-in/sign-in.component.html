@@ -1,25 +1,49 @@
-<div class="auth-wrapper">
-  <form class="form-signin" [formGroup]="loginForm" (ngSubmit)="loginUser()">
-    <h3 class="h3 mb-3 font-weight-normal text-center">Please sign in</h3>
-    <div class="form-group">
-      <label>Email</label>
-      <input
-        type="email"
-        class="form-control"
-        formControlName="email"
-        placeholder="Enter email"
-        required
-      />
-    </div>
-    <div class="form-group">
-      <label>Password</label>
-      <input
-        type="password"
-        class="form-control"
-        formControlName="password"
-        placeholder="Password"
-      />
-    </div>
-    <button type="submit" class="btn btn-block btn-primary">Sign in</button>
-  </form>
+<div class="columns p-0 m-0">
+  <div class="column is-half p-0 m-0">
+    <section class="hero p-0 m-0 is-fullheight">
+      <div class="hero-body">
+      <form class="box" [formGroup]="loginForm" (ngSubmit)="loginUser()" style="width:100% !important">
+        <div class="field">
+          <label class="label">Email</label>
+          <div class="control">
+            <input required class="input" type="email" formControlName="email" placeholder="e.g. alex@example.com">
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">Password</label>
+          <div class="control">
+            <input class="input" type="password"  formControlName="password" placeholder="********">
+          </div>
+        </div>
+        <div class="level">
+          <div class="level-left">
+            <div class="level-item">
+              <button class="button is-primary">Sign in</button>
+            </div>
+            <div class="level-item">
+              <a routerLinkActive="active" routerLink="/signup">
+                <strong> Register here...</strong>
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </form>
+      </div>
+    </section>
+
+  </div>
+  <div class="column is-half m-0 p-0" style="background-color: #0074D9;">
+    <section class="hero is-success p-0 m-0 is-fullheight">
+      <div class="hero-body is-flex is-flex-direction-column is-justify-content-center">
+        <p class="title">
+          CoDejavu
+        </p>
+        <p class="subtitle">
+          Save the future<br>
+          Into the present
+        </p>
+      </div>
+    </section>
+  </div>
 </div>
