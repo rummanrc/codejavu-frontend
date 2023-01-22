@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { User } from './user';
 import { catchError, map, Observable, tap} from 'rxjs';
-import { Router } from '@angular/router';
 import { RestService } from "../rest/rest.service";
 import { restAPI } from "../../constants";
 
@@ -10,7 +9,7 @@ import { restAPI } from "../../constants";
 })
 
 export class AuthService {
-  constructor(private _rest: RestService, public router: Router) {}
+  constructor(private _rest: RestService) {}
   get isLoggedIn(): boolean {
     return !!this.getToken();
   }
