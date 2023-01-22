@@ -17,13 +17,12 @@ export class SignupComponent {
     this.signupForm = this.fb.group({
       name: [''],
       email: [''],
-      mobile: [''],
       password: [''],
     });
   }
   registerUser(): void {
     this.authService.signUp(this.signupForm.value).subscribe((res) => {
-      if (res.result) {
+      if (res) {
         this.signupForm.reset();
         this.router.navigate(['login']);
       }
