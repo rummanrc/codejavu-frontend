@@ -92,6 +92,7 @@ describe('AuthService', () => {
       "token": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjozfQ.Ejb7AG8Ypnli3kC33FHO7KUvIR5Xd3-g67BhsEahGCY",
       "userId": 1
     }
+
     const signInApi = restService.url(restAPI.LOGIN);
     service.logIn(userSignInData).subscribe( (data) => {
       expect(data).toBe(userSignInResponseData as AuthenticationData);

@@ -11,7 +11,6 @@ import { restAPI } from "../../constants";
 
 export class AuthService {
   constructor(private _rest: RestService, public router: Router) {}
-
   get isLoggedIn(): boolean {
     return !!this.getToken();
   }
