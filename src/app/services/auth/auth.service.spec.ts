@@ -1,34 +1,26 @@
 import { TestBed } from '@angular/core/testing';
 
-import {AuthenticationData, AuthService} from './auth.service';
+import {AuthService} from './auth.service';
 import {RestService} from "../rest/rest.service";
-import {RouterTestingModule} from "@angular/router/testing";
-import {Router} from "@angular/router";
+import {of} from "rxjs";
 import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
-import {HTTP_INTERCEPTORS} from "@angular/common/http";
 import {restAPI} from "../../constants";
+import {AppConfig} from "../../app-config";
 
 describe('AuthService', () => {
   let service: AuthService;
-  let mockRouter: Router;
-  let restService: RestService;
   let httpMock: HttpTestingController;
+  let rest: RestService;
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule,
-        HttpClientTestingModule
-      ],
+      imports: [HttpClientTestingModule],
       providers: [
-        RestService,
-        {provide: HTTP_INTERCEPTORS, useClass: RestService, multi: true},
+        RestService
       ]
     });
     service = TestBed.inject(AuthService);
-    mockRouter = TestBed.inject(Router);
-    restService = TestBed.inject(RestService);
+    rest = TestBed.inject(RestService);
     httpMock = TestBed.inject(HttpTestingController);
-
     let store: any = {};
     const mockLocalStorage = {
       getItem: (key: string): string => {
@@ -53,7 +45,31 @@ describe('AuthService', () => {
     spyOn(Object.getPrototypeOf(localStorage), 'clear')
       .and.callFake(mockLocalStorage.clear);
 
+    spyOn(Object.getPrototypeOf(rest), "url")
+      .and.callThrough();
+
   });
+
+  let userSignUpResponseData = {
+    "user": {
+      "id": 1,
+      "email": "user@email.com",
+      "password_digest": "user_password_digest",
+      "created_at": "2023-01-20T14:40:05.041Z",
+      "updated_at": "2023-01-20T14:40:05.041Z"
+    },
+    "token": "user_signup_response_token"
+  }
+
+  let userSignInResponseData = {
+    "token": "user_signin_response_token",
+    "user_id": 1
+  }
+
+  let processedSignInResponse = {
+    "token": "user_signin_response_token",
+    "userId": 1
+  }
 
   it('should be created', () => {
     expect(service).toBeTruthy();
@@ -65,22 +81,14 @@ describe('AuthService', () => {
         email: "user@email.com",
         password: "123456"
     };
-    const userSignUpResponseData = {
-      "user": {
-        "id": 1,
-        "email": "abc@qwe.com",
-        "password_digest": "$2a$12$HADZloR0kj624eB4I..zBO/Mm.aVL9NtaVIPnDSh2k33RRZQrimEG",
-        "created_at": "2023-01-20T14:40:05.041Z",
-        "updated_at": "2023-01-20T14:40:05.041Z"
-      },
-      "token": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjozfQ.Ejb7AG8Ypnli3kC33FHO7KUvIR5Xd3-g67BhsEahGCY"
-    }
-    const signUpApi = restService.url(restAPI.SIGN_UP);
+    spyOn(Object.getPrototypeOf(rest), "post")
+      .and.returnValue(of(userSignUpResponseData));
     service.signUp(userSignUpData).subscribe( (data) => {
-      expect(data).toBe(userSignUpResponseData);
+      expect(data).toEqual(userSignUpResponseData);
     });
-    const req = httpMock.expectOne(signUpApi);
-    req.flush(userSignUpResponseData);
+
+    expect(rest.url).toHaveBeenCalled();
+    expect(rest.post).toHaveBeenCalledWith(AppConfig.BASE_URL + restAPI.SIGN_UP, userSignUpData);
   });
 
   it('should be logged in a user', () => {
@@ -88,19 +96,17 @@ describe('AuthService', () => {
       "email": "user@email.com",
       "password": "123456"
     };
-    const userSignInResponseData = {
-      "token": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjozfQ.Ejb7AG8Ypnli3kC33FHO7KUvIR5Xd3-g67BhsEahGCY",
-      "userId": 1
-    }
+    spyOn(Object.getPrototypeOf(rest), "post")
+      .and.returnValue(of(userSignInResponseData));
 
-    const signInApi = restService.url(restAPI.LOGIN);
     service.logIn(userSignInData).subscribe( (data) => {
-      expect(data).toBe(userSignInResponseData as AuthenticationData);
+      expect(data).toEqual(processedSignInResponse);
     });
-    const req = httpMock.expectOne(signInApi);
-    req.flush(userSignInResponseData);
+
+    expect(rest.post).toHaveBeenCalledWith(AppConfig.BASE_URL + restAPI.LOGIN, userSignInData);
+
     expect(service.isLoggedIn).toEqual(true);
-    expect(service.getToken()).toEqual("eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjozfQ.Ejb7AG8Ypnli3kC33FHO7KUvIR5Xd3-g67BhsEahGCY");
+    expect(service.getToken()).toEqual("user_signin_response_token");
   });
 
   it('should be logged out a user', () => {
