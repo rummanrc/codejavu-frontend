@@ -8,17 +8,17 @@
     <section class="modal-card-body">
       <!-- Content ... -->
       <div class="columns">
-        <div class="column is-10">
-          <pre highlight [code]="snippet.snippet">
+        <div id="highlighted_code" class="column is-10">
+          <pre  highlight [code]="snippet.snippet">
           </pre>
         </div>
         <div class="column">
-          <div>
+          <div id="language">
             <p>
               Language: {{snippet.language}}
             </p>
-            <span>
-              <p> Tags: </p> <p *ngFor="let tag of snippet.tags">{{tag}}&#32;</p>
+            <span id="tags">
+              <p> Tags: </p> <p *ngFor="let tag of snippet.tags">{{tag.name}}&#32;</p>
             </span>
 
           </div>
