@@ -12,7 +12,7 @@ describe("Failed Logging (Isolate)", () => {
   let fixture: ComponentFixture<SignInComponent>;
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SignInComponent ],
+      declarations: [SignInComponent],
       imports: [ReactiveFormsModule],
       providers: [
         FormBuilder,
