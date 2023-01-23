@@ -11,10 +11,6 @@ import {route} from "../../../../constants";
 export class NavbarComponent implements OnInit {
 
   constructor(private _authService: AuthService, private _router: Router) { }
-  
-  get isLoggedIn(): boolean {
-    return this._authService.isLoggedIn;
-  }
   logout(): void {
     this._authService.doLogout();
     this._router.navigate([route.LOGIN]).catch(err => console.log(err));
