@@ -35,8 +35,8 @@ describe('SnippetComponent', () => {
     fixture.detectChanges();
   });
 
-  const snippet = {
-    "id": 1,
+  let snippet = {
+    "id": 2,
     "title": "title 1",
     "language": "java",
     "tags": [
@@ -49,7 +49,7 @@ describe('SnippetComponent', () => {
     "urls": [
       "asdsd"
     ]
-  };
+  }
   const languageList = [
     {
       "id": 1,
@@ -84,13 +84,13 @@ describe('SnippetComponent', () => {
   ];
   const snipets = [
     {
-      "id": 2,
+      "id": 1,
       "title": "title 1",
       "language": "php",
       "tags": []
     },
     {
-      "id": 1,
+      "id": 2,
       "title": "title 2",
       "language": "java",
       "tags": [
@@ -156,6 +156,7 @@ describe('SnippetComponent', () => {
   let showModal: boolean = false;
   let showEditModal: boolean = false;
 
+
   it('should create', () => {
     expect(component).toBeTruthy();
   });
@@ -190,7 +191,7 @@ describe('SnippetComponent', () => {
     spyOn<any>(component, 'loadSnippetList');
     spyOn<any>(component, 'loadLanguageList');
     spyOn<any>(component, 'loadTagList');
-    spyOn<any>(component, 'showCodeSnippet').and.callFake(() => {
+    let spyShowCodeSnippet = spyOn<any>(component, 'showCodeSnippet').and.callFake(() => {
       showModal = true;
     });
 
@@ -215,11 +216,24 @@ describe('SnippetComponent', () => {
     el_snippet.dispatchEvent(new Event('click'));
     tick();
     fixture.detectChanges();
+
+    expect(spyShowCodeSnippet).toHaveBeenCalledWith(1);
+
     const el_snippet_show_dialog = fixture.nativeElement.querySelector("app-snippet-show-dialog");
     expect(el_snippet_show_dialog.getAttribute("ng-reflect-modal-active")).toBe('true');
 
     const el_snippet_edit_dialog = fixture.nativeElement.querySelector("app-snippet-create-edit-dialog");
     expect(el_snippet_edit_dialog.getAttribute("ng-reflect-modal-active")).toBe('false');
+
+    const el_language = el_snippet_show_dialog.querySelector("#language>p");
+    expect(el_language.innerText.trim()).toBe('Language: java');
+
+    const el_title = el_snippet_show_dialog.querySelector("p.modal-card-title");
+    expect(el_title.innerText.trim()).toBe('title 1');
+
+
+    const el_tags = el_snippet_show_dialog.querySelector("#tags> p:last-child");
+    expect(el_tags.innerText.trim()).toBe('general'.trim());
   }));
 
 });

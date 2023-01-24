@@ -144,7 +144,7 @@ export interface Snippet {
   snippet?: string,
   language?: string,
   urls?: string[],
-  tags?: string[]
+  tags?: Tag[]
 }
 
 export interface Language {
