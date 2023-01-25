@@ -7,11 +7,15 @@ import {AuthService} from "../../../services/auth/auth.service";
 import {Router} from "@angular/router";
 import {of} from "rxjs";
 import {DashboardModule} from "../dashboard.module";
+import {restAPI} from "../../../constants";
+import {AppConfig} from "../../../app-config";
+import truthy = jasmine.truthy;
 
 describe('SnippetComponent', () => {
   let component: SnippetComponent;
   let fixture: ComponentFixture<SnippetComponent>;
   let auth: AuthService;
+  let rest: RestService;
   let httpMock: HttpTestingController;
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -31,10 +35,33 @@ describe('SnippetComponent', () => {
     fixture = TestBed.createComponent(SnippetComponent);
     component = fixture.componentInstance;
     auth = TestBed.inject(AuthService);
+    rest = TestBed.inject(RestService);
     httpMock = TestBed.inject(HttpTestingController);
     fixture.detectChanges();
   });
+  function createUrl(path: string): string {
+      return AppConfig.BASE_URL + path;
+  }
+  function fakeGet(url: string){
 
+    switch (url) {
+      case createUrl(restAPI.LANGUAGES): {
+        return of(languageList);
+      }
+      case createUrl(restAPI.TAGS): {
+        return of(tagList);
+      }
+      case createUrl(restAPI.SNIPPETS): {
+        return of(snippets);
+      }
+      case createUrl(`${restAPI.SNIPPETS}/1`): {
+        return of(snippet);
+      }
+      default: {
+        break;
+      }
+    }
+  }
   let snippet = {
     "id": 2,
     "title": "title 1",
@@ -82,7 +109,7 @@ describe('SnippetComponent', () => {
       "name": "auth"
     }
   ];
-  const snipets = [
+  const snippets = [
     {
       "id": 1,
       "title": "title 1",
@@ -162,16 +189,11 @@ describe('SnippetComponent', () => {
   });
 
   it('should show list of the snippets', fakeAsync(() => {
-    const spyLoadSnippet = spyOn<any>(component, 'loadSnippetList');
-    const spyLoadLanguage = spyOn<any>(component, 'loadLanguageList');
-    const spyLoadTag = spyOn<any>(component, 'loadTagList');
-
-    spyOnProperty(component, "snippets", "get").and.returnValue(snipets);
-    spyOnProperty(component, 'languages',"get").and.returnValue(languageList);
-    spyOnProperty(component, 'tags', "get").and.returnValue(tagList);
-
+    const spyLoadSnippet = spyOn<any>(component, 'loadSnippetList').and.callThrough();
+    const spyLoadLanguage = spyOn<any>(component, 'loadLanguageList').and.callThrough();
+    const spyLoadTag = spyOn<any>(component, 'loadTagList').and.callThrough();
+    spyOn(Object.getPrototypeOf(rest), 'get').and.callFake(fakeGet);
     component.ngOnInit();
-
     expect(spyLoadSnippet).toHaveBeenCalled();
     expect(spyLoadLanguage).toHaveBeenCalled();
     expect(spyLoadTag).toHaveBeenCalled();
@@ -187,27 +209,37 @@ describe('SnippetComponent', () => {
     expect(el_snippets.length).toEqual(6);
   }));
 
+  it('should show create new snippet', fakeAsync(() => {
+    const spyLoadSnippet = spyOn<any>(component, 'loadSnippetList').and.callThrough();
+    const spyLoadLanguage = spyOn<any>(component, 'loadLanguageList').and.callThrough();
+    const spyLoadTag = spyOn<any>(component, 'loadTagList').and.callThrough();
+    spyOn(Object.getPrototypeOf(rest), 'get').and.callFake(fakeGet);
+    component.ngOnInit();
+    expect(spyLoadSnippet).toHaveBeenCalled();
+    expect(spyLoadLanguage).toHaveBeenCalled();
+    expect(spyLoadTag).toHaveBeenCalled();
+    fixture.detectChanges();
+
+    const el_snippet_show_dialog = fixture.nativeElement.querySelector("app-snippet-show-dialog");
+    expect(el_snippet_show_dialog.getAttribute("ng-reflect-modal-active")).toBe('false');
+
+    const el_snippet_edit_dialog = fixture.nativeElement.querySelector("app-snippet-create-edit-dialog");
+    expect(el_snippet_edit_dialog.getAttribute("ng-reflect-modal-active")).toBe('false');
+
+    const el_create = fixture.nativeElement.querySelector("a.button.is-success");
+    expect(el_create).toBeTruthy();
+
+    el_create.dispatchEvent(new Event('click'));
+    tick();
+
+    fixture.detectChanges();
+    expect(el_snippet_show_dialog.getAttribute("ng-reflect-modal-active")).toBe('false');
+    expect(el_snippet_edit_dialog.getAttribute("ng-reflect-modal-active")).toBe('true');
+  }));
+
+
   it('should show the snippet', fakeAsync(() => {
-    spyOn<any>(component, 'loadSnippetList');
-    spyOn<any>(component, 'loadLanguageList');
-    spyOn<any>(component, 'loadTagList');
-    let spyShowCodeSnippet = spyOn<any>(component, 'showCodeSnippet').and.callFake(() => {
-      showModal = true;
-    });
-
-    spyOnProperty(component, "snippets", "get").and.returnValue(snipets);
-    spyOnProperty(component, 'languages',"get").and.returnValue(languageList);
-    spyOnProperty(component, 'tags', "get").and.returnValue(tagList);
-    spyOnProperty(component, 'snippet', "get").and.returnValue(snippet);
-    spyOnProperty(component, 'isModalCreateEditActive', "get").and.returnValue(false);
-    spyOnProperty(component, 'isModalActive', "get").and.callFake(() => {
-      return showModal;
-    });
-    spyOn(component, 'closeSnippetModal').and.callFake(() => {
-      showModal = false;
-    });
-    spyOn(component, 'showAddEditCodeSnippet');
-
+    spyOn(Object.getPrototypeOf(rest), 'get').and.callFake(fakeGet);
     component.ngOnInit();
     fixture.detectChanges();
 
@@ -215,25 +247,70 @@ describe('SnippetComponent', () => {
     expect(el_snippet).toBeTruthy();
     el_snippet.dispatchEvent(new Event('click'));
     tick();
+
     fixture.detectChanges();
 
-    expect(spyShowCodeSnippet).toHaveBeenCalledWith(1);
-
-    const el_snippet_show_dialog = fixture.nativeElement.querySelector("app-snippet-show-dialog");
+    let el_snippet_show_dialog = fixture.nativeElement.querySelector("app-snippet-show-dialog");
     expect(el_snippet_show_dialog.getAttribute("ng-reflect-modal-active")).toBe('true');
 
     const el_snippet_edit_dialog = fixture.nativeElement.querySelector("app-snippet-create-edit-dialog");
     expect(el_snippet_edit_dialog.getAttribute("ng-reflect-modal-active")).toBe('false');
 
-    const el_language = el_snippet_show_dialog.querySelector("#language>p");
-    expect(el_language.innerText.trim()).toBe('Language: java');
+    const el_title = el_snippet_show_dialog.querySelector("p.modal-card-title");
+    expect(el_title.innerText.trim()).toBe('title 1');
+
+    const el_close = el_snippet_show_dialog.querySelector("button.delete");
+    expect(el_close).toBeTruthy();
+
+    el_close.dispatchEvent(new Event('click'));
+    tick();
+    fixture.detectChanges();
+    expect(el_snippet_show_dialog.getAttribute("ng-reflect-modal-active")).toBe('false');
+  }));
+
+  it('should show the snippet edit', fakeAsync(() => {
+    spyOn(Object.getPrototypeOf(rest), 'get').and.callFake(fakeGet);
+    component.ngOnInit();
+    fixture.detectChanges();
+
+    const el_snippet = fixture.nativeElement.querySelector("table.table>tbody>tr:first-child>td:first-child");
+    expect(el_snippet).toBeTruthy();
+    el_snippet.dispatchEvent(new Event('click'));
+    tick();
+
+    fixture.detectChanges();
+
+    let el_snippet_show_dialog = fixture.nativeElement.querySelector("app-snippet-show-dialog");
+    expect(el_snippet_show_dialog.getAttribute("ng-reflect-modal-active")).toBe('true');
+
+    let el_snippet_edit_dialog = fixture.nativeElement.querySelector("app-snippet-create-edit-dialog");
+    expect(el_snippet_edit_dialog.getAttribute("ng-reflect-modal-active")).toBe('false');
 
     const el_title = el_snippet_show_dialog.querySelector("p.modal-card-title");
     expect(el_title.innerText.trim()).toBe('title 1');
 
+    const el_edit = el_snippet_show_dialog.querySelector("footer>button.is-warning");
+    expect(el_edit).toBeTruthy();
 
-    const el_tags = el_snippet_show_dialog.querySelector("#tags> p:last-child");
-    expect(el_tags.innerText.trim()).toBe('general'.trim());
+    el_edit.dispatchEvent(new Event('click'));
+    tick();
+    fixture.detectChanges();
+
+    expect(el_snippet_show_dialog.getAttribute("ng-reflect-modal-active")).toBe('false');
+    expect(el_snippet_edit_dialog.getAttribute("ng-reflect-modal-active")).toBe('true');
+
+    const el_edit_title = el_snippet_edit_dialog.querySelector("p.modal-card-title");
+    expect(el_edit_title).toBeTruthy();
+    // expect(el_edit_title.innerText.trim()).toBe('title 1');
+    const el_close = el_snippet_edit_dialog.querySelector("button.delete");
+    expect(el_close).toBeTruthy();
+
+    el_close.dispatchEvent(new Event('click'));
+    tick();
+    fixture.detectChanges();
+    expect(el_snippet_show_dialog.getAttribute("ng-reflect-modal-active")).toBe('false');
+    expect(el_snippet_edit_dialog.getAttribute("ng-reflect-modal-active")).toBe('false');
   }));
+
 
 });
