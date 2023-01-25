@@ -8,31 +8,13 @@ import {restAPI} from "../../../constants";
   styleUrls: ['./snippet.component.css'],
 })
 export class SnippetComponent implements OnInit {
-  snippets: any;
+  private _snippets: any;
   private _languages: Language[] = []
   private _tags: Tag[] = []
   private _modalActive: boolean = false;
   private _modalCreateEditActive: boolean = false;
   private _snippet: Snippet = {};
-  constructor(private _rest: RestService){
-    this.loadLanguageList().subscribe({
-      next: (languageData) => {
-        this._languages = languageData;
-      },
-      error: (err) => {
-        //No-op
-      }
-    });
-    this.loadTagList().subscribe({
-      next: (tagData) => {
-        this._tags = tagData;
-      },
-      error: (err) => {
-        //No-op
-      }
-    });
-  }
-
+  constructor(private _rest: RestService){ }
   get isModalActive(): boolean {
     return this._modalActive;
   }
@@ -42,6 +24,9 @@ export class SnippetComponent implements OnInit {
   get snippet(): Snippet {
     return this._snippet;
   }
+  get snippets(): any {
+    return this._snippets;
+  }
   get languages(): Language[] {
     return this._languages;
   }
@@ -50,17 +35,10 @@ export class SnippetComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    let api = this._rest.url(restAPI.SNIPPETS);
-    this._rest.get(api).subscribe({
-      next: value => {
-        this.snippets = value;
-      },
-      error: err => {
-        //No-op
-      }
-    });
+    this.loadLanguageList();
+    this.loadTagList();
+    this.loadSnippetList();
   }
-
   showCodeSnippet(snippetId: number): void {
     this.loadSnippet(snippetId).subscribe( {
       next: data => {
@@ -112,27 +90,52 @@ export class SnippetComponent implements OnInit {
       })
     );
   }
-  private loadLanguageList(): Observable<Language[]> {
+  private loadLanguageList(): void {
     const api = this._rest.url(restAPI.LANGUAGES);
-    return this._rest.get<any>(api).pipe(
+    this._rest.get<any>(api).pipe(
       map( (data) => {
         return data as Language[];
       }),
       catchError((err) => {
         throw err;
       })
-    );
+    ).subscribe({
+      next: (languageData) => {
+        this._languages = languageData;
+      },
+      error: (err) => {
+        //No-op
+      }
+    });
   }
-  private loadTagList(): Observable<Tag[]> {
+  private loadTagList(): void {
     const api = this._rest.url(restAPI.TAGS);
-    return this._rest.get<any>(api).pipe(
+    this._rest.get<any>(api).pipe(
       map( (data) => {
         return data as Tag[];
       }),
       catchError((err) => {
         throw err;
       })
-    );
+    ).subscribe({
+      next: (tagData) => {
+        this._tags = tagData;
+      },
+      error: (err) => {
+        //No-op
+      }
+    })
+  }
+  private loadSnippetList(): void {
+    let api = this._rest.url(restAPI.SNIPPETS);
+    this._rest.get(api).subscribe({
+      next: value => {
+        this._snippets = value;
+      },
+      error: err => {
+        //No-op
+      }
+    });
   }
 }
 export interface Snippet {
@@ -141,7 +144,7 @@ export interface Snippet {
   snippet?: string,
   language?: string,
   urls?: string[],
-  tags?: string[]
+  tags?: Tag[]
 }
 
 export interface Language {
