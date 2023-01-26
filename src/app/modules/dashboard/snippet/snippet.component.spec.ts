@@ -10,6 +10,8 @@ import {DashboardModule} from "../dashboard.module";
 import {restAPI} from "../../../constants";
 import {AppConfig} from "../../../app-config";
 import truthy = jasmine.truthy;
+import {ClipboardModule} from "@angular/cdk/clipboard";
+import {SnippetShowDialogComponent} from "../components/snippet-show-dialog/snippet-show-dialog.component";
 
 describe('SnippetComponent', () => {
   let component: SnippetComponent;
@@ -19,7 +21,7 @@ describe('SnippetComponent', () => {
   let httpMock: HttpTestingController;
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, DashboardModule],
+      imports: [HttpClientTestingModule, DashboardModule, ClipboardModule],
       providers: [
         RestService,
         { provide: Router, useClass: class {
@@ -209,7 +211,7 @@ describe('SnippetComponent', () => {
     expect(el_snippets.length).toEqual(6);
   }));
 
-  it('should show create new snippet', fakeAsync(() => {
+  it('should show new snippet', fakeAsync(() => {
     const spyLoadSnippet = spyOn<any>(component, 'loadSnippetList').and.callThrough();
     const spyLoadLanguage = spyOn<any>(component, 'loadLanguageList').and.callThrough();
     const spyLoadTag = spyOn<any>(component, 'loadTagList').and.callThrough();
@@ -311,6 +313,4 @@ describe('SnippetComponent', () => {
     expect(el_snippet_show_dialog.getAttribute("ng-reflect-modal-active")).toBe('false');
     expect(el_snippet_edit_dialog.getAttribute("ng-reflect-modal-active")).toBe('false');
   }));
-
-
 });

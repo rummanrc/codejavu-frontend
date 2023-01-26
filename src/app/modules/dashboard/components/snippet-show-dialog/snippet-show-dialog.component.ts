@@ -6,7 +6,7 @@ import {Snippet} from "../../snippet/snippet.component";
   templateUrl: './snippet-show-dialog.component.html',
   styleUrls: ['./snippet-show-dialog.component.css']
 })
-export class SnippetCreateDialogComponent {
+export class SnippetShowDialogComponent {
   @Input() modalActive: boolean = false;
   @Input() snippet: Snippet = {};
   @Output() modalDeactivateEvent = new EventEmitter<boolean>();
