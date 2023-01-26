@@ -1,25 +1,53 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { SnippetCreateDialogComponent } from './snippet-show-dialog.component';
+import {SnippetShowDialogComponent} from './snippet-show-dialog.component';
+import {Clipboard, ClipboardModule} from "@angular/cdk/clipboard";
 
 describe('SnippetCreateDialogComponent', () => {
-  let component: SnippetCreateDialogComponent;
-  let fixture: ComponentFixture<SnippetCreateDialogComponent>;
-
+  let component: SnippetShowDialogComponent;
+  let fixture: ComponentFixture<SnippetShowDialogComponent>;
+  let clipboard: Clipboard;
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SnippetCreateDialogComponent ]
+      imports: [ClipboardModule],
+      providers: [Clipboard],
+      declarations: [SnippetShowDialogComponent]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SnippetCreateDialogComponent);
+    fixture = TestBed.createComponent(SnippetShowDialogComponent);
     component = fixture.componentInstance;
+    clipboard = TestBed.inject(Clipboard);
     fixture.detectChanges();
+    component.snippet = snippet;
+    component.modalActive = true;
   });
+  let snippet = {
+    "id": 2,
+    "title": "title 1",
+    "language": "java",
+    "tags": [
+      {
+        "id": 1,
+        "name": "general"
+      }
+    ],
+    "snippet": "<?php echo \"jjjjjjjjjjjjjj\">",
+    "urls": [
+      "asdsd"
+    ]
+  }
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should copy snippet', () => {
+    const spyBeginCopy = spyOn<any>(clipboard,"beginCopy").and.callThrough();
+    fixture.detectChanges();
+    component.copyCodeClipboard();
+    expect(spyBeginCopy).toHaveBeenCalled();
   });
 });

@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { DashboardRoutingModule } from './dashboard-routing.module';
 import {SnippetComponent} from "./snippet/snippet.component";
 import { DashboardComponent } from './dashboard.component';
-import { SnippetCreateDialogComponent } from './components/snippet-show-dialog/snippet-show-dialog.component';
+import { SnippetShowDialogComponent } from './components/snippet-show-dialog/snippet-show-dialog.component';
 import { SnippetCreateEditDialogComponent } from './components/snippet-create-edit-dialog/snippet-create-edit-dialog.component';
 import { HighlighterComponent } from './components/highlighter/highlighter.component';
 import {FormsModule} from "@angular/forms";
@@ -16,7 +16,7 @@ import { NavbarComponent } from './components/navbar/navbar.component';
   declarations: [
     SnippetComponent,
     DashboardComponent,
-    SnippetCreateDialogComponent,
+    SnippetShowDialogComponent,
     SnippetCreateEditDialogComponent,
     HighlighterComponent,
     NgxCodeJarComponent,
