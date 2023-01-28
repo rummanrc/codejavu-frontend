@@ -3,7 +3,7 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {SnippetShowDialogComponent} from './snippet-show-dialog.component';
 import {Clipboard, ClipboardModule} from "@angular/cdk/clipboard";
 
-describe('SnippetCreateDialogComponent', () => {
+describe('SnippetShowDialogComponent', () => {
   let component: SnippetShowDialogComponent;
   let fixture: ComponentFixture<SnippetShowDialogComponent>;
   let clipboard: Clipboard;
