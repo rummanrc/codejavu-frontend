@@ -13,11 +13,11 @@
           <div class="block">
             <div class="is-inline-block">
               <div class="mt-3 select">
-                <select [(ngModel)]="tag">
+                <select id="tag" [(ngModel)]="tag">
                   <option *ngFor="let tagElem of tags" [ngValue]="tagElem">{{tagElem.name}}</option>
                 </select>
               </div>
-              <button class="button mt-3" (click)="addTagList()">
+              <button id="add_tag" class="button mt-3" (click)="addTagList()">
                     <span class="icon is-small">
                       <i class="fa-solid fa-plus"></i>
                     </span>
@@ -25,7 +25,7 @@
             </div>
           </div>
           <div class="block">
-            <div class="field is-grouped is-grouped-multiline">
+            <div id="tag_list" class="field is-grouped is-grouped-multiline">
               <div class="control" *ngFor="let tag of tagList">
                 <div class="tags has-addons">
                   <a class="tag is-link">{{tag.name}}</a>
@@ -41,7 +41,7 @@
             </div>
             <div class="block">
               <div class="select">
-                <select [(ngModel)]="langId">
+                <select id="lang" [(ngModel)]="langId">
                   <option *ngFor="let language of languages" value="{{language.id}}">{{language.name}}</option>
                 </select>
               </div>
@@ -49,14 +49,14 @@
             <div class="block">
               <div class="is-inline-flex">
                 <input class="input" type="text" [(ngModel)]="url" placeholder="Add url">
-                <button class="button" (click)="addUrlList()">
+                <button id="add_url" class="button" (click)="addUrlList()">
                     <span class="icon is-small">
                       <i class="fa-solid fa-plus"></i>
                     </span>
                 </button>
               </div>
             </div>
-            <div class="block">
+            <div id="url_list" class="block">
               <div class="tags p-0 m-0 has-addons" *ngFor = "let url of urls">
                 <span class="tag">{{truncate(url)}}</span>
                 <a class="tag is-delete" (click)="removeUrlfromList(url)"></a>
@@ -67,14 +67,14 @@
 
     </section>
     <footer class="modal-card-foot">
-      <button type="submit" class="button is-success" (click)="saveCodeSnippet()">
+      <button id="save" type="submit" class="button is-success" (click)="saveCodeSnippet()">
         <span class="icon is-small">
           <i class="fa-regular fa-clipboard"></i>
         </span>
         <span>Save</span>
       </button>
       <button class="button" (click)="closeSnippetModal()">Cancel</button>
-      <button class="button is-danger is-right" (click)="clearSnippet()">
+      <button id="clear" class="button is-danger is-right" (click)="clearSnippet()">
         <span class="icon is-small">
           <i class="fa-solid fa-delete-left"></i>
         </span>
