@@ -6,10 +6,10 @@ import {SnippetComponent} from "./snippet/snippet.component";
 import { DashboardComponent } from './dashboard.component';
 import { SnippetShowDialogComponent } from './components/snippet-show-dialog/snippet-show-dialog.component';
 import { SnippetCreateEditDialogComponent } from './components/snippet-create-edit-dialog/snippet-create-edit-dialog.component';
-import { HighlighterComponent } from './components/highlighter/highlighter.component';
 import {FormsModule} from "@angular/forms";
 import { NgxCodeJarComponent } from './components/editor/NgxCodeJar.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
+import { SyntaxHighlightDirective } from './directives/SyntaxHighlight/syntax-highlight.directive';
 
 
 @NgModule({
@@ -18,9 +18,9 @@ import { NavbarComponent } from './components/navbar/navbar.component';
     DashboardComponent,
     SnippetShowDialogComponent,
     SnippetCreateEditDialogComponent,
-    HighlighterComponent,
     NgxCodeJarComponent,
-    NavbarComponent
+    NavbarComponent,
+    SyntaxHighlightDirective
   ],
   imports: [
     CommonModule,
