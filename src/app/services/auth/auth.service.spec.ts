@@ -1,4 +1,4 @@
-import { TestBed } from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 
 import {AuthService} from './auth.service';
 import {RestService} from "../rest/rest.service";
@@ -26,13 +26,13 @@ describe('AuthService', () => {
       getItem: (key: string): string => {
         return key in store ? store[key] : null;
       },
-      setItem: (key: string, value: string) => {
+      setItem: (key: string, value: string): void => {
         store[key] = `${value}`;
       },
-      removeItem: (key: string) => {
+      removeItem: (key: string): void => {
         delete store[key];
       },
-      clear: () => {
+      clear: (): void => {
         store = {};
       }
     };
@@ -59,17 +59,17 @@ describe('AuthService', () => {
       "updated_at": "2023-01-20T14:40:05.041Z"
     },
     "token": "user_signup_response_token"
-  }
+  };
 
   let userSignInResponseData = {
     "token": "user_signin_response_token",
     "user_id": 1
-  }
+  };
 
   let processedSignInResponse = {
     "token": "user_signin_response_token",
     "userId": 1
-  }
+  };
 
   it('should be created', () => {
     expect(service).toBeTruthy();
@@ -77,13 +77,13 @@ describe('AuthService', () => {
 
   it('should be signed up a user', () => {
     const userSignUpData = {
-        name: "dummy",
-        email: "user@email.com",
-        password: "123456"
+      name: "dummy",
+      email: "user@email.com",
+      password: "123456"
     };
     spyOn(Object.getPrototypeOf(rest), "post")
       .and.returnValue(of(userSignUpResponseData));
-    service.signUp(userSignUpData).subscribe( (data) => {
+    service.signUp(userSignUpData).subscribe((data) => {
       expect(data).toEqual(userSignUpResponseData);
     });
 
@@ -99,7 +99,7 @@ describe('AuthService', () => {
     spyOn(Object.getPrototypeOf(rest), "post")
       .and.returnValue(of(userSignInResponseData));
 
-    service.logIn(userSignInData).subscribe( (data) => {
+    service.logIn(userSignInData).subscribe((data) => {
       expect(data).toEqual(processedSignInResponse);
     });
 

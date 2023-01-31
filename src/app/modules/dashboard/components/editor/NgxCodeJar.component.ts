@@ -1,24 +1,33 @@
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  EventEmitter, Input,
-  OnInit, Output, ViewChild
-} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 // import hljs from "highlight.js";
 import {CodeJar} from "codejar";
 import {Position} from "codejar/codejar";
+
 // import {withLineNumbers} from "codejar/linenumbers";
 
 @Component({
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'ngx-codejar',
   templateUrl: './NgxCodeJar.component.html',
   styleUrls: ['./NgxCodeJar.component.css']
 })
-export class NgxCodeJarComponent implements OnInit, AfterViewInit {
+export class NgxCodeJarComponent implements AfterViewInit {
+  @Output() update: EventEmitter<string>;
+  @Output() codeChange = new EventEmitter<string>();
+  @Input() highlighter: 'prism' | 'hljs' = 'hljs';
   @ViewChild('editor') editor: ElementRef | undefined;
+
+  // @Input() showLineNumbers = false;
+  // Events
+  /**
+   * is triggered after highlighting
+   */
   private codeJar: CodeJar | undefined;
   private _code = '';
+
+  constructor() {
+    this.update = new EventEmitter<string>();
+  }
 
   @Input() set code(value: string) {
     if (this._code !== value) {
@@ -26,22 +35,10 @@ export class NgxCodeJarComponent implements OnInit, AfterViewInit {
       this.updateCode(value);
     }
   }
-  // @Input() showLineNumbers = false;
-  @Output() codeChange = new EventEmitter<string>();
-  @Input() highlighter: 'prism' | 'hljs' = 'hljs';
-  // Events
-  /**
-   * is triggered after highlighting
-   */
-  @Output() update: EventEmitter<string>;
-  @Input() highlightMethod: (editor: CodeJarContainer, pos?: Position) => void = () => {
-  }
 
-  constructor() {
-    this.update = new EventEmitter<string>();
-  }
-  ngOnInit(): void {
-  }
+  @Input() highlightMethod: (editor: CodeJarContainer, pos?: Position)=> void = () => {
+  };
+
 
   ngAfterViewInit(): void {
     if (this.editor !== undefined) {
@@ -58,7 +55,8 @@ export class NgxCodeJarComponent implements OnInit, AfterViewInit {
       this.update.emit(this._code);
     }
   }
-  public updateCode(newCode: string) {
+
+  public updateCode(newCode: string): void {
     if (this.codeJar) {
       this.codeJar.updateCode(newCode);
     }

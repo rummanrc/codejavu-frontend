@@ -10,4 +10,4 @@ export const restAPI = {
   SNIPPETS: '/snippets',
   LANGUAGES: '/languages',
   TAGS: '/tags'
-}
+};

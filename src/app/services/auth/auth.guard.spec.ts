@@ -1,20 +1,22 @@
-import { TestBed } from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 
-import { AuthGuard } from './auth.guard';
+import {AuthGuard} from './auth.guard';
 import {ActivatedRouteSnapshot, Router, RouterStateSnapshot} from "@angular/router";
 import {AuthService} from "./auth.service";
 import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
 import {route} from "../../constants";
+
 function fakeRouterState(url: string): RouterStateSnapshot {
   return {
     url,
   } as RouterStateSnapshot;
 }
+
 describe('AuthGuard', () => {
   let guard: AuthGuard;
   let authMock = {isLoggedIn: jasmine.createSpy('isLoggedIn')};
-  let httpMock:HttpTestingController;
-  let routerMock = {navigate: jasmine.createSpy('navigate')}
+  let httpMock: HttpTestingController;
+  let routerMock = {navigate: jasmine.createSpy('navigate')};
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -22,8 +24,8 @@ describe('AuthGuard', () => {
         HttpClientTestingModule
       ],
       providers: [
-        { provide: Router, useValue: routerMock },
-        { provide: AuthService, useValue: authMock }
+        {provide: Router, useValue: routerMock},
+        {provide: AuthService, useValue: authMock}
       ]
     });
     guard = TestBed.inject(AuthGuard);
@@ -40,7 +42,7 @@ describe('AuthGuard', () => {
 
     describe('when the user is logged in', () => {
       beforeEach(() => {
-        guard1 = new AuthGuard( authMock1, routerMock1);
+        guard1 = new AuthGuard(authMock1, routerMock1);
       });
       let authMock1 = jasmine.createSpyObj('AuthService', ['isLoggedIn']);
       let routerMock1 = jasmine.createSpyObj('Router', ['navigate']);
@@ -57,7 +59,7 @@ describe('AuthGuard', () => {
     });
     describe('when the user is logged out', () => {
       beforeEach(() => {
-        guard1 = new AuthGuard( authMock1, routerMock1);
+        guard1 = new AuthGuard(authMock1, routerMock1);
       });
       let authMock1 = jasmine.createSpyObj('AuthService', ['isLoggedIn']);
       let routerMock1 = jasmine.createSpyObj('Router', ['navigate']);

@@ -38,14 +38,14 @@ describe('SnippetShowDialogComponent', () => {
     "urls": [
       "asdsd"
     ]
-  }
+  };
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
   it('should copy snippet', () => {
-    const spyBeginCopy = spyOn<any>(clipboard,"beginCopy").and.callThrough();
+    const spyBeginCopy = spyOn<any>(clipboard, "beginCopy").and.callThrough();
     fixture.detectChanges();
     component.copyCodeClipboard();
     expect(spyBeginCopy).toHaveBeenCalled();

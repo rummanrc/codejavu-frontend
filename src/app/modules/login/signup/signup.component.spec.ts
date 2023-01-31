@@ -1,7 +1,7 @@
 import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
-import { SignupComponent } from './signup.component';
+import {SignupComponent} from './signup.component';
 import {FormBuilder, ReactiveFormsModule} from "@angular/forms";
-import {AuthenticationData, AuthService} from "../../../services/auth/auth.service";
+import {AuthService} from "../../../services/auth/auth.service";
 import {of} from "rxjs";
 import {Router} from "@angular/router";
 
@@ -11,11 +11,12 @@ describe('SignupComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SignupComponent ],
+      declarations: [SignupComponent],
       imports: [ReactiveFormsModule],
       providers: [
         FormBuilder,
-        {provide: AuthService, useClass: class {
+        {
+          provide: AuthService, useClass: class {
             signUp = jasmine.createSpy("signUp").and.returnValue(of({
               "user": {
                 "id": 1,
@@ -25,9 +26,11 @@ describe('SignupComponent', () => {
                 "updated_at": "2023-01-21T14:12:59.799Z"
               },
               "token": "sign_up_token"
-            }))
-          }},
-        { provide: Router, useClass: class {
+            }));
+          }
+        },
+        {
+          provide: Router, useClass: class {
             navigate = jasmine.createSpy("navigate").and.resolveTo(true);
           }
         }
@@ -45,7 +48,7 @@ describe('SignupComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-  it("should signup successfully", fakeAsync( () => {
+  it("should signup successfully", fakeAsync(() => {
     spyOn(component, 'registerUser').and.callThrough();
     let router = fixture.debugElement.injector.get(Router);
     let auth = fixture.debugElement.injector.get(AuthService);

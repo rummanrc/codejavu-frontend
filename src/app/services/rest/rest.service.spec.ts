@@ -1,5 +1,5 @@
-import { TestBed } from '@angular/core/testing';
-import { RestService } from './rest.service';
+import {TestBed} from '@angular/core/testing';
+import {RestService} from './rest.service';
 import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
 import {restAPI} from "../../constants";
 import {AppConfig} from "../../app-config";
@@ -13,7 +13,7 @@ describe('RestService', () => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
       providers: [
-        {provide:HTTP_INTERCEPTORS, useClass: RestService, multi: true},
+        {provide: HTTP_INTERCEPTORS, useClass: RestService, multi: true},
       ]
     });
     service = TestBed.inject(RestService);
@@ -23,13 +23,13 @@ describe('RestService', () => {
       getItem: (key: string): string => {
         return key in store ? store[key] : null;
       },
-      setItem: (key: string, value: string) => {
+      setItem: (key: string, value: string): void => {
         store[key] = `${value}`;
       },
-      removeItem: (key: string) => {
+      removeItem: (key: string): void => {
         delete store[key];
       },
-      clear: () => {
+      clear: (): void => {
         store = {};
       }
     };
@@ -50,10 +50,10 @@ describe('RestService', () => {
   });
 
   it('should create api url', () => {
-    expect(service.url(restAPI.LOGIN)).toMatch(AppConfig.BASE_URL+restAPI.LOGIN);
-    expect(service.url(restAPI.SIGN_UP)).toMatch(AppConfig.BASE_URL+restAPI.SIGN_UP);
-    expect(service.url(restAPI.SNIPPETS)).toMatch(AppConfig.BASE_URL+restAPI.SNIPPETS);
-    expect(service.url(restAPI.TAGS)).toMatch(AppConfig.BASE_URL+restAPI.TAGS);
+    expect(service.url(restAPI.LOGIN)).toMatch(AppConfig.BASE_URL + restAPI.LOGIN);
+    expect(service.url(restAPI.SIGN_UP)).toMatch(AppConfig.BASE_URL + restAPI.SIGN_UP);
+    expect(service.url(restAPI.SNIPPETS)).toMatch(AppConfig.BASE_URL + restAPI.SNIPPETS);
+    expect(service.url(restAPI.TAGS)).toMatch(AppConfig.BASE_URL + restAPI.TAGS);
   });
 
   it('should return stored token from localstorage', () => {
@@ -61,7 +61,7 @@ describe('RestService', () => {
   });
 
   it('should call get http method', () => {
-    const dummyData = { data: 'ok' };
+    const dummyData = {data: 'ok'};
     const dummyApi = `${AppConfig.BASE_URL}/get`;
     service.get(dummyApi).subscribe(data => {
       expect(data).toEqual(dummyData);
@@ -72,16 +72,16 @@ describe('RestService', () => {
   });
 
   it('should call post http method', () => {
-    const dummyData = { data: 'ok' };
-    const dummyApi = `${AppConfig.BASE_URL}/post`
+    const dummyData = {data: 'ok'};
+    const dummyApi = `${AppConfig.BASE_URL}/post`;
     service.post(dummyApi, dummyData).subscribe();
     const req = httpMock.expectOne(dummyApi);
     expect(req.request.method).toBe("POST");
   });
 
   it('should intercept post api call', () => {
-    const dummyData = { data: 'ok' };
-    const dummyApiPost = `${AppConfig.BASE_URL}/post`
+    const dummyData = {data: 'ok'};
+    const dummyApiPost = `${AppConfig.BASE_URL}/post`;
     service.post(dummyApiPost, dummyData).subscribe();
     const req = httpMock.expectOne(dummyApiPost);
     expect(req.request.headers.has('Accept')).toBe(true);
@@ -92,8 +92,8 @@ describe('RestService', () => {
   });
 
   it('should intercept get api call', () => {
-    const dummyApiGet = `${AppConfig.BASE_URL}/get`
-    service.get(dummyApiGet).subscribe( data => {
+    const dummyApiGet = `${AppConfig.BASE_URL}/get`;
+    service.get(dummyApiGet).subscribe(data => {
       expect(data).toBe(null);
     });
     const req = httpMock.expectOne(dummyApiGet);
