@@ -1,6 +1,6 @@
 import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 
-import { SignInComponent } from './sign-in.component';
+import {SignInComponent} from './sign-in.component';
 import {AuthenticationData, AuthService} from "../../../services/auth/auth.service";
 import {FormBuilder, ReactiveFormsModule} from "@angular/forms";
 import {Router} from "@angular/router";
@@ -16,15 +16,19 @@ describe("Failed Logging (Isolate)", () => {
       imports: [ReactiveFormsModule],
       providers: [
         FormBuilder,
-        {provide: AuthService, useClass: class {
-            logIn = jasmine.createSpy("logIn").and.returnValue(of({token: "token", userId: 1} as AuthenticationData))
-        }},
-        {provide: Router, useClass: class {
-          navigate = jasmine.createSpy("navigate").and.resolveTo(true);
-          }}
+        {
+          provide: AuthService, useClass: class {
+            logIn = jasmine.createSpy("logIn").and.returnValue(of({token: "token", userId: 1} as AuthenticationData));
+          }
+        },
+        {
+          provide: Router, useClass: class {
+            navigate = jasmine.createSpy("navigate").and.resolveTo(true);
+          }
+        }
       ]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {
@@ -37,13 +41,13 @@ describe("Failed Logging (Isolate)", () => {
     expect(component).toBeTruthy();
   });
 
-  it( 'should render the login form', async () => {
+  it('should render the login form', async () => {
     fixture.detectChanges();
     const el = fixture.nativeElement.querySelector("form");
     expect(el).toBeTruthy();
   });
 
-  it("should login successfully", fakeAsync( () => {
+  it("should login successfully", fakeAsync(() => {
     spyOn(component, 'loginUser').and.callThrough();
     let router = fixture.debugElement.injector.get(Router);
     let auth = fixture.debugElement.injector.get(AuthService);
@@ -81,16 +85,20 @@ describe('SignInComponent (Isolated)', () => {
   let fixture: ComponentFixture<SignInComponent>;
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SignInComponent ],
+      declarations: [SignInComponent],
       imports: [ReactiveFormsModule],
       providers: [
         FormBuilder,
-        {provide: AuthService, useClass: class {
-            logIn = jasmine.createSpy("logIn").and.throwError("Sorry, incorrect email or password")
-          }},
-        {provide: Router, useClass: class {
+        {
+          provide: AuthService, useClass: class {
+            logIn = jasmine.createSpy("logIn").and.throwError("Sorry, incorrect email or password");
+          }
+        },
+        {
+          provide: Router, useClass: class {
             navigate = jasmine.createSpy("navigate").and.resolveTo(false);
-          }}
+          }
+        }
       ]
     })
       .compileComponents();
@@ -101,7 +109,7 @@ describe('SignInComponent (Isolated)', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
-  it("should login falied", fakeAsync( () => {
+  it("should login falied", fakeAsync(() => {
     spyOn(component, 'loginUser').and.callThrough();
     let router = fixture.debugElement.injector.get(Router);
     let auth = fixture.debugElement.injector.get(AuthService);
@@ -129,7 +137,7 @@ describe('SignInComponent (Isolated)', () => {
     fixture.detectChanges();
 
     expect(component.loginUser).toHaveBeenCalled();
-    expect(component.loginUser).toThrowError()
+    expect(component.loginUser).toThrowError();
     expect(auth.logIn).toThrowError('Sorry, incorrect email or password');
     expect(router.navigate).not.toHaveBeenCalled();
   }));

@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { RestService } from "../../../services/rest/rest.service";
-import { catchError, map, Observable } from "rxjs";
+import {Component, OnInit} from '@angular/core';
+import {RestService} from "../../../services/rest/rest.service";
+import {catchError, map, Observable} from "rxjs";
 import {restAPI} from "../../../constants";
+
 @Component({
   selector: 'app-dashboard',
   templateUrl: './snippet.component.html',
@@ -9,27 +10,35 @@ import {restAPI} from "../../../constants";
 })
 export class SnippetComponent implements OnInit {
   private _snippets: any;
-  private _languages: Language[] = []
-  private _tags: Tag[] = []
+  private _languages: Language[] = [];
+  private _tags: Tag[] = [];
   private _modalActive: boolean = false;
   private _modalCreateEditActive: boolean = false;
   private _snippet: Snippet = {};
-  constructor(private _rest: RestService){ }
+
+  constructor(private _rest: RestService) {
+  }
+
   get isModalActive(): boolean {
     return this._modalActive;
   }
+
   get isModalCreateEditActive(): boolean {
     return this._modalCreateEditActive;
   }
+
   get snippet(): Snippet {
     return this._snippet;
   }
+
   get snippets(): any {
     return this._snippets;
   }
+
   get languages(): Language[] {
     return this._languages;
   }
+
   get tags(): Tag[] {
     return this._tags;
   }
@@ -39,8 +48,9 @@ export class SnippetComponent implements OnInit {
     this.loadTagList();
     this.loadSnippetList();
   }
+
   showCodeSnippet(snippetId: number): void {
-    this.loadSnippet(snippetId).subscribe( {
+    this.loadSnippet(snippetId).subscribe({
       next: data => {
         this._snippet = data;
       },
@@ -50,10 +60,11 @@ export class SnippetComponent implements OnInit {
     });
     this._modalActive = true;
   }
+
   showAddEditCodeSnippet(snippet?: Snippet): void {
     this.closeSnippetModal();
-    if(snippet !== undefined){
-      this._snippet = snippet
+    if (snippet !== undefined) {
+      this._snippet = snippet;
     } else {
       this._snippet = {
         title: "Untitled",
@@ -65,19 +76,23 @@ export class SnippetComponent implements OnInit {
     }
     this._modalCreateEditActive = true;
   }
+
   closeSnippetModal(): void {
     this._snippet = {};
     this._modalActive = false;
   }
+
   closeSnippetCreateEditModal(): void {
     this._modalCreateEditActive = false;
     this._snippet = {};
   }
+
   private loadSnippet(id: number): Observable<Snippet> {
     const api = this._rest.url(`${restAPI.SNIPPETS}/${id}`);
     return this._rest.get<any>(api).pipe(
-      map( (data) => {
-        return { id: data.id,
+      map((data) => {
+        return {
+          id: data.id,
           title: data.title,
           snippet: data.snippet,
           language: data.language,
@@ -85,15 +100,16 @@ export class SnippetComponent implements OnInit {
           tags: data.tags
         } as Snippet;
       }),
-      catchError( (err) => {
+      catchError((err) => {
         throw  err;
       })
     );
   }
+
   private loadLanguageList(): void {
     const api = this._rest.url(restAPI.LANGUAGES);
     this._rest.get<any>(api).pipe(
-      map( (data) => {
+      map((data) => {
         return data as Language[];
       }),
       catchError((err) => {
@@ -108,10 +124,11 @@ export class SnippetComponent implements OnInit {
       }
     });
   }
+
   private loadTagList(): void {
     const api = this._rest.url(restAPI.TAGS);
     this._rest.get<any>(api).pipe(
-      map( (data) => {
+      map((data) => {
         return data as Tag[];
       }),
       catchError((err) => {
@@ -124,8 +141,9 @@ export class SnippetComponent implements OnInit {
       error: (err) => {
         //No-op
       }
-    })
+    });
   }
+
   private loadSnippetList(): void {
     let api = this._rest.url(restAPI.SNIPPETS);
     this._rest.get(api).subscribe({
@@ -138,6 +156,7 @@ export class SnippetComponent implements OnInit {
     });
   }
 }
+
 export interface Snippet {
   id?: number,
   title?: string,
@@ -151,6 +170,7 @@ export interface Language {
   id: number,
   name: string
 }
+
 export interface Tag {
   id: number,
   name: string

@@ -5,7 +5,7 @@ import {HttpClientTestingModule, HttpTestingController} from "@angular/common/ht
 import {DashboardModule} from "../../dashboard.module";
 import {By} from "@angular/platform-browser";
 import {restAPI} from "../../../../constants";
-import {of} from "rxjs";
+import {Observable, of} from "rxjs";
 import {AppConfig} from "../../../../app-config";
 
 describe('SnippetCreateEditDialogComponent', () => {
@@ -42,7 +42,7 @@ describe('SnippetCreateEditDialogComponent', () => {
         "name": "auth"
       }
     ];
-    component.languages =[
+    component.languages = [
       {
         "id": 1,
         "name": "java"
@@ -60,14 +60,15 @@ describe('SnippetCreateEditDialogComponent', () => {
         "name": "javascript"
       }
     ];
-    component.code = "<?php echo 'hello'; ?>"
+    component.code = "<?php echo 'hello'; ?>";
     fixture.detectChanges();
   });
 
   function createUrl(path: string): string {
     return AppConfig.BASE_URL + path;
   }
-  function fakePost(url: string){
+
+  function fakePost(url: string): Observable<any> | undefined {
 
     switch (url) {
       case createUrl(restAPI.SNIPPETS): {
@@ -78,6 +79,7 @@ describe('SnippetCreateEditDialogComponent', () => {
       }
     }
   }
+
   let snippetResponse = {
     "id": 1,
     "title": "test",
@@ -102,12 +104,12 @@ describe('SnippetCreateEditDialogComponent', () => {
       "https://url-2.com",
       "https://url-3.com"
     ]
-  }
+  };
   let snippet = {
     "title": "test",
-    "language_id" : 2,
+    "language_id": 2,
     "tags": [
-      1,3
+      1, 3
     ],
     "snippet": "<?php echo 'hello'; ?>",
     "urls": [
@@ -115,7 +117,7 @@ describe('SnippetCreateEditDialogComponent', () => {
       "https://url-2.com",
       "https://url-3.com"
     ]
-  }
+  };
 
   it('should create', () => {
     expect(component).toBeTruthy();
@@ -159,23 +161,23 @@ describe('SnippetCreateEditDialogComponent', () => {
 
     let el_url_list = fixture.nativeElement.querySelector("#url_list");
     expect(el_url_list.children.length).toEqual(3);
-    expect(el_url_list.children[0].querySelector('span').innerText).toEqual("url 1"+"\u2026");
-    expect(el_url_list.children[1].querySelector('span').innerText).toEqual("url 2"+"\u2026");
-    expect(el_url_list.children[2].querySelector('span').innerText).toEqual("url 3"+"\u2026");
+    expect(el_url_list.children[0].querySelector('span').innerText).toEqual("url 1" + "\u2026");
+    expect(el_url_list.children[1].querySelector('span').innerText).toEqual("url 2" + "\u2026");
+    expect(el_url_list.children[2].querySelector('span').innerText).toEqual("url 3" + "\u2026");
 
-    let el_last_url_remove_btn =  el_url_list.children[2].querySelector("a");
-    let el_first_url_remove_btn =  el_url_list.children[0].querySelector("a");
+    let el_last_url_remove_btn = el_url_list.children[2].querySelector("a");
+    let el_first_url_remove_btn = el_url_list.children[0].querySelector("a");
 
     el_last_url_remove_btn.dispatchEvent(new Event('click'));
     fixture.detectChanges();
     expect(el_url_list.children.length).toEqual(2);
-    expect(el_url_list.children[0].querySelector('span').innerText).toEqual("url 1"+"\u2026");
-    expect(el_url_list.children[1].querySelector('span').innerText).toEqual("url 2"+"\u2026");
+    expect(el_url_list.children[0].querySelector('span').innerText).toEqual("url 1" + "\u2026");
+    expect(el_url_list.children[1].querySelector('span').innerText).toEqual("url 2" + "\u2026");
 
     el_first_url_remove_btn.dispatchEvent(new Event('click'));
     fixture.detectChanges();
     expect(el_url_list.children.length).toEqual(1);
-    expect(el_url_list.children[0].querySelector('span').innerText).toEqual("url 2"+"\u2026");
+    expect(el_url_list.children[0].querySelector('span').innerText).toEqual("url 2" + "\u2026");
   });
 
   it('should add remove tag', () => {
@@ -194,7 +196,7 @@ describe('SnippetCreateEditDialogComponent', () => {
     el_tag_select.dispatchEvent(new Event('change'));
     el_tag_btn.click();
     fixture.detectChanges();
-    el_tag_select.value = el_tag_select.options[2].value
+    el_tag_select.value = el_tag_select.options[2].value;
     el_tag_select.dispatchEvent(new Event('change'));
     el_tag_btn.click();
     fixture.detectChanges();
@@ -207,8 +209,8 @@ describe('SnippetCreateEditDialogComponent', () => {
     expect(el_tag_list.children[1].querySelector('a.is-link').innerText).toEqual("world");
     expect(el_tag_list.children[2].querySelector('a.is-link').innerText).toEqual("auth");
 
-    let el_last_tag_remove_btn =  el_tag_list.children[2].querySelector("a.is-delete");
-    let el_first_tag_remove_btn =  el_tag_list.children[0].querySelector("a.is-delete");
+    let el_last_tag_remove_btn = el_tag_list.children[2].querySelector("a.is-delete");
+    let el_first_tag_remove_btn = el_tag_list.children[0].querySelector("a.is-delete");
 
     el_last_tag_remove_btn.dispatchEvent(new Event('click'));
     fixture.detectChanges();
@@ -282,7 +284,7 @@ describe('SnippetCreateEditDialogComponent', () => {
     el_tag_select.dispatchEvent(new Event('change'));
     el_tag_btn.click();
     fixture.detectChanges();
-    el_tag_select.value = el_tag_select.options[2].value
+    el_tag_select.value = el_tag_select.options[2].value;
     el_tag_select.dispatchEvent(new Event('change'));
     el_tag_btn.click();
     fixture.detectChanges();
@@ -298,8 +300,6 @@ describe('SnippetCreateEditDialogComponent', () => {
     expect(spyCloseSnippetModal).toHaveBeenCalled();
 
   });
-
-
 
 
 });

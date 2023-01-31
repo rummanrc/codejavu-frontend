@@ -1,6 +1,6 @@
 import {ComponentFixture, fakeAsync, TestBed} from '@angular/core/testing';
 
-import { NavbarComponent } from './navbar.component';
+import {NavbarComponent} from './navbar.component';
 import {AuthService} from "../../../../services/auth/auth.service";
 import {Router} from "@angular/router";
 import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
@@ -14,22 +14,24 @@ describe('NavbarComponent', () => {
   let router: Router;
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ NavbarComponent ],
+      declarations: [NavbarComponent],
       imports: [HttpClientTestingModule],
       providers: [
         AuthService,
-        { provide: Router, useClass: class {
-          navigate = jasmine.createSpy("navigate").and.resolveTo(true);
-          }}
+        {
+          provide: Router, useClass: class {
+            navigate = jasmine.createSpy("navigate").and.resolveTo(true);
+          }
+        }
       ]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(NavbarComponent);
     auth = TestBed.inject(AuthService);
-    httpMock = TestBed.inject(HttpTestingController)
+    httpMock = TestBed.inject(HttpTestingController);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -38,7 +40,7 @@ describe('NavbarComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should logout the user', fakeAsync( () => {
+  it('should logout the user', fakeAsync(() => {
     spyOn(auth, 'doLogout');
     spyOn(component, 'logout').and.callThrough();
     fixture.detectChanges();

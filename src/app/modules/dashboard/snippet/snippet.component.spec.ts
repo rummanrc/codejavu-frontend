@@ -1,17 +1,15 @@
 import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 
-import { SnippetComponent } from './snippet.component';
+import {SnippetComponent} from './snippet.component';
 import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
 import {RestService} from "../../../services/rest/rest.service";
 import {AuthService} from "../../../services/auth/auth.service";
 import {Router} from "@angular/router";
-import {of} from "rxjs";
+import {Observable, of} from "rxjs";
 import {DashboardModule} from "../dashboard.module";
 import {restAPI} from "../../../constants";
 import {AppConfig} from "../../../app-config";
-import truthy = jasmine.truthy;
 import {ClipboardModule} from "@angular/cdk/clipboard";
-import {SnippetShowDialogComponent} from "../components/snippet-show-dialog/snippet-show-dialog.component";
 
 describe('SnippetComponent', () => {
   let component: SnippetComponent;
@@ -24,13 +22,15 @@ describe('SnippetComponent', () => {
       imports: [HttpClientTestingModule, DashboardModule, ClipboardModule],
       providers: [
         RestService,
-        { provide: Router, useClass: class {
+        {
+          provide: Router, useClass: class {
             navigate = jasmine.createSpy("navigate").and.resolveTo(true);
-          }}
+          }
+        }
       ],
       declarations: [SnippetComponent]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {
@@ -41,10 +41,12 @@ describe('SnippetComponent', () => {
     httpMock = TestBed.inject(HttpTestingController);
     fixture.detectChanges();
   });
+
   function createUrl(path: string): string {
-      return AppConfig.BASE_URL + path;
+    return AppConfig.BASE_URL + path;
   }
-  function fakeGet(url: string){
+
+  function fakeGet(url: string): Observable<any> | undefined {
 
     switch (url) {
       case createUrl(restAPI.LANGUAGES): {
@@ -64,6 +66,7 @@ describe('SnippetComponent', () => {
       }
     }
   }
+
   let snippet = {
     "id": 2,
     "title": "title 1",
@@ -78,7 +81,7 @@ describe('SnippetComponent', () => {
     "urls": [
       "asdsd"
     ]
-  }
+  };
   const languageList = [
     {
       "id": 1,
