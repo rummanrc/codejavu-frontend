@@ -1,3 +1,6 @@
+[![Build](https://github.com/rummanrc/codejavu-frontend/actions/workflows/npm-build.yml/badge.svg)](https://github.com/rummanrc/codejavu-frontend/actions/workflows/npm-build.yml)
+
+
 # Codejavu Frontend
 The frontend (Angular) for the CoDeJaVu project (Rails backend)
 
