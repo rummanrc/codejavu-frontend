@@ -1,3 +1,9 @@
+[![Build](https://github.com/rummanrc/codejavu-frontend/actions/workflows/npm-build.yml/badge.svg)](https://github.com/rummanrc/codejavu-frontend/actions/workflows/npm-build.yml)
+
+[![Test](https://github.com/rummanrc/codejavu-frontend/actions/workflows/npm-test.yml/badge.svg?branch=chore%2Fworkflow-build&event=check_run)](https://github.com/rummanrc/codejavu-frontend/actions/workflows/npm-test.yml)
+
+[![Build](https://github.com/rummanrc/codejavu-frontend/actions/workflows/npm-build.yml/badge.svg?branch=chore%2Fworkflow-build&event=check_run)](https://github.com/rummanrc/codejavu-frontend/actions/workflows/npm-build.yml)
+
 # Codejavu Frontend
 The frontend (Angular) for the CoDeJaVu project (Rails backend)
 
