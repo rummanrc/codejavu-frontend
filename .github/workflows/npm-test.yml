@@ -38,3 +38,12 @@ jobs:
           chromedriver --url-base=/wd/hub &
           sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 & # optional
           npm test
+      - name: Dynamic badges
+        uses: schneegans/dynamic-badges-action@v1.6.0
+        with:
+          auth: ${{ secrets.GIST_SECRET }}
+          gistID: a13557bf81b76bce839557422f4934fb
+          filename: codejavu.json
+          label: Hello
+          message: World
+          color: orange
