@@ -29,14 +29,15 @@ module.exports = function (config) {
       subdir: '.',
       reporters: [
         { type: 'html' },
-        { type: 'text-summary' }
-      ]
+        { type: 'text-summary', file: 'coverage.txt' }
+      ],
     },
     reporters: ['progress', 'kjhtml'],
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
+
     browsers: ['Chrome'],
     singleRun: true,
     restartOnFileChange: true
