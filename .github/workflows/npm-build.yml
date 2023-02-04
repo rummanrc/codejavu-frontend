@@ -24,7 +24,7 @@ jobs:
           auth: ${{ secrets.GIST_SECRET }}
           gistID: 90ee50aa93ce086479150422134e56e4
           filename: codejavu_node.json
-          label: version
+          label: node
           message: ${{ matrix.node-version }}
           color: orange
       - uses: actions/checkout@v3
