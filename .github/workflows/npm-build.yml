@@ -17,8 +17,6 @@ jobs:
       matrix:
         node-version: [ 16.x ]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-    env:
-      NODE_VERSION: node -v
     steps:
       - name: Node version
         uses: schneegans/dynamic-badges-action@v1.6.0
@@ -27,7 +25,7 @@ jobs:
           gistID: 90ee50aa93ce086479150422134e56e4
           filename: codejavu_node.json
           label: version
-          message: $NODE_VERSION
+          message: ${{ matrix.node-version }}
           color: orange
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
