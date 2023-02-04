@@ -63,9 +63,9 @@ describe("Failed Logging (Isolate)", () => {
     email_el.value = "test@email.com";
     email_el.dispatchEvent(new Event('input'));
     fixture.detectChanges();
-    password_el.value = "12345678";
-    password_el.dispatchEvent(new Event('input'));
-    fixture.detectChanges();
+    // password_el.value = "12345678";
+    // password_el.dispatchEvent(new Event('input'));
+    // fixture.detectChanges();
 
     expect(component.loginForm.get("email")?.value).toEqual("test@email.com");
     expect(component.loginForm.get("password")?.value).toEqual("12345678");
