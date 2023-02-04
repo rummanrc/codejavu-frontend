@@ -1,6 +1,8 @@
 [![Build](https://github.com/rummanrc/codejavu-frontend/actions/workflows/npm-build.yml/badge.svg?branch=chore%2Fworkflow-build)](https://github.com/rummanrc/codejavu-frontend/actions/workflows/npm-build.yml)
 [![Test](https://github.com/rummanrc/codejavu-frontend/actions/workflows/npm-test.yml/badge.svg?branch=chore%2Fworkflow-build)](https://github.com/rummanrc/codejavu-frontend/actions/workflows/npm-test.yml)
 ![node](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/rummanrc/90ee50aa93ce086479150422134e56e4/raw/codejavu_node.json)
+[![con_com](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/rummanrc/60d4750d3108550bcf68191cf1e44459/raw/codejavu_conventional_commit.json)](https://conventionalcommits.org)
+[![code_style](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/rummanrc/c5f639373a506af198df86e4d8b1afdf/raw/codejavu_code_style.json)](https://standardjs.com/)
 
 # Codejavu Frontend
 
