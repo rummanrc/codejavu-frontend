@@ -3,11 +3,11 @@
 
 name: Test
 
-#on:
-#  push:
-#    branches: [ "dev1.0" ]
-#  pull_request:
-#    branches: [ "dev1.0" ]
+on:
+  push:
+    branches: [ "chore/workflow-build" ]
+  pull_request:
+    branches: [ "chore/workflow-build" ]
 
 jobs:
   test:
@@ -20,15 +20,6 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-      - name: Init Dynamic badges
-        uses: schneegans/dynamic-badges-action@v1.6.0
-        with:
-          auth: ${{ secrets.GIST_SECRET }}
-          gistID: a13557bf81b76bce839557422f4934fb
-          filename: codejavu.json
-          label: Test
-          message: ongoing
-          color: orange
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
@@ -47,12 +38,3 @@ jobs:
           chromedriver --url-base=/wd/hub &
           sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 & # optional
           npm test
-      - name: Dynamic badges
-        uses: schneegans/dynamic-badges-action@v1.6.0
-        with:
-          auth: ${{ secrets.GIST_SECRET }}
-          gistID: a13557bf81b76bce839557422f4934fb
-          filename: codejavu.json
-          label: Test
-          message: World
-          color: orange
