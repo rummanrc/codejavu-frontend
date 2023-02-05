@@ -9,8 +9,6 @@ on:
     branches: [ "chore/workflow-build" ]
 jobs:
   build:
-    env:
-      test: ""
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -27,5 +25,5 @@ jobs:
         run: npm ci
       - name: Run coverage
         run: |
-          echo "this is test" >> ${{env.test}}
-          echo ${{env.test}}
+        #          echo "this is test" >> ${{env.test}}
+#          echo ${{env.test}}
