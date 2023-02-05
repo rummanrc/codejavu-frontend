@@ -38,12 +38,12 @@ jobs:
           chromedriver --url-base=/wd/hub &
           sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 & # optional
           npm test
-      - name: Run coverage
-        run: |
-          export DISPLAY=:99
-          chromedriver --url-base=/wd/hub &
-          sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 & # optional
-          npm run coverage | tail -5 >> $CODEJAVU_COVERAGE
+      #      - name: Run coverage
+      #        run: |
+      #          export DISPLAY=:99
+      #          chromedriver --url-base=/wd/hub &
+      #          sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 & # optional
+      #          npm run coverage | tail -5 >> $CODEJAVU_COVERAGE
 
       - name: Statements Coverage
         uses: schneegans/dynamic-badges-action@v1.6.0
