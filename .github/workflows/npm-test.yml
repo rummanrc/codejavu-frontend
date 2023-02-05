@@ -46,10 +46,14 @@ jobs:
           sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 & # optional
           val=$(npm run coverage | tail -5)
           array=($val)
-          echo "statement=${array[2]}" >> $GITHUB_ENV
-          echo "branch=${array[8]}" >> $GITHUB_ENV
-          echo "function=${array[14]}" >> $GITHUB_ENV
-          echo "line=${array[20]}" >> $GITHUB_ENV
+          statement=${array[2]}
+          branch=${array[8]}
+          function=${array[14]}
+          line=${array[20]}
+          echo "statement=${statement:0:${#statement}-1}" >> $GITHUB_ENV
+          echo "branch=${branch:0:${#branch}-1}" >> $GITHUB_ENV
+          echo "function=${function:0:${#function}-1}" >> $GITHUB_ENV
+          echo "line=${line:0:${#line}-1}" >> $GITHUB_ENV
       - name: Statements Coverage
         uses: schneegans/dynamic-badges-action@v1.6.0
         with:
@@ -57,8 +61,10 @@ jobs:
           gistID: 9551338162f925dc43214b3fe9ecaf13
           filename: codejavu_coverage_statements.json
           label: statements coverage
-          message: ${{ env.statement }}
-          color: orange
+          message: ${{ env.statement }}%
+          valColorRange: ${{ env.statement }}
+          maxColorRange: 100
+          minColorRange: 70
       - name: Functions Coverage
         uses: schneegans/dynamic-badges-action@v1.6.0
         with:
@@ -66,8 +72,10 @@ jobs:
           gistID: 11be7f5d7651527ffcf24cc24a8466b2
           filename: codejavu_coverage_functions.json
           label: functions coverage
-          message: ${{ env.function }}
-          color: orange
+          message: ${{ env.function }}%
+          valColorRange: ${{ env.function }}
+          maxColorRange: 100
+          minColorRange: 70
       - name: Lines Coverage
         uses: schneegans/dynamic-badges-action@v1.6.0
         with:
@@ -75,8 +83,10 @@ jobs:
           gistID: c35ad03761983d3d939a62a2f1d6db70
           filename: codejavu_coverage_lines.json
           label: lines coverage
-          message: ${{ env.line }}
-          color: orange
+          message: ${{ env.line }}%
+          valColorRange: ${{ env.line }}
+          maxColorRange: 100
+          minColorRange: 70
       - name: Branches Coverage
         uses: schneegans/dynamic-badges-action@v1.6.0
         with:
@@ -84,6 +94,8 @@ jobs:
           gistID: 6c5c47e3ca816021a6ce013b04dd3880
           filename: codejavu_coverage_branches.json
           label: branches coverage
-          message: ${{ env.branch }}
-          color: orange
+          message: ${{ env.branch }}%
+          valColorRange: ${{ env.branch }}
+          maxColorRange: 100
+          minColorRange: 70
 
