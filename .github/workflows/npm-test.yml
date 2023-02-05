@@ -50,10 +50,6 @@ jobs:
           echo "branch=${array[8]}" >> $GITHUB_ENV
           echo "function=${array[14]}" >> $GITHUB_ENV
           echo "line=${array[20]}" >> $GITHUB_ENV
-      #          echo "COVERAGE="${val//:/_}"" >> $GITHUB_OUTPUT
-
-      - name: Show coverage
-        run: echo "The selected color is ${{ env.statement }}"
       - name: Statements Coverage
         uses: schneegans/dynamic-badges-action@v1.6.0
         with:
@@ -61,7 +57,7 @@ jobs:
           gistID: 9551338162f925dc43214b3fe9ecaf13
           filename: codejavu_coverage_statements.json
           label: statements coverage
-          message: ${{ matrix.node-version }}
+          message: ${{ env.statement }}
           color: orange
       - name: Functions Coverage
         uses: schneegans/dynamic-badges-action@v1.6.0
@@ -70,7 +66,7 @@ jobs:
           gistID: 11be7f5d7651527ffcf24cc24a8466b2
           filename: codejavu_coverage_functions.json
           label: functions coverage
-          message: ${{ matrix.node-version }}
+          message: ${{ env.function }}
           color: orange
       - name: Lines Coverage
         uses: schneegans/dynamic-badges-action@v1.6.0
@@ -79,7 +75,7 @@ jobs:
           gistID: c35ad03761983d3d939a62a2f1d6db70
           filename: codejavu_coverage_lines.json
           label: lines coverage
-          message: ${{ matrix.node-version }}
+          message: ${{ env.line }}
           color: orange
       - name: Branches Coverage
         uses: schneegans/dynamic-badges-action@v1.6.0
@@ -88,6 +84,6 @@ jobs:
           gistID: 6c5c47e3ca816021a6ce013b04dd3880
           filename: codejavu_coverage_branches.json
           label: branches coverage
-          message: ${{ matrix.node-version }}
+          message: ${{ env.branch }}
           color: orange
 
