@@ -10,7 +10,8 @@ module.exports = function (config) {
       require('karma-chrome-launcher'),
       require('karma-jasmine-html-reporter'),
       require('karma-coverage'),
-      require('@angular-devkit/build-angular/plugins/karma')
+      require('@angular-devkit/build-angular/plugins/karma'),
+      require('karma-verbose-reporter')
     ],
     client: {
       jasmine: {
@@ -28,8 +29,9 @@ module.exports = function (config) {
       dir: require('path').join(__dirname, './coverage/codejavu-frontend'),
       subdir: '.',
       reporters: [
-        { type: 'html' },
-        { type: 'text-summary', file: 'coverage.txt' }
+        // { type: 'html' },
+        // { type: 'text-summary', file: 'coverage.txt' }
+        { type: 'text-summary' }
       ]
     },
     reporters: ['progress', 'kjhtml'],
