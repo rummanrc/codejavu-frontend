@@ -5,9 +5,9 @@ name: build
 
 on:
   push:
-    branches: [ "chore/workflow-build" ]
+    branches: [ "dev1.0" ]
   pull_request:
-    branches: [ "chore/workflow-build" ]
+    branches: [ "dev1.0" ]
 
 jobs:
   build:
