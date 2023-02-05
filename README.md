@@ -1,22 +1,29 @@
-[![Build](https://github.com/rummanrc/codejavu-frontend/actions/workflows/npm-build.yml/badge.svg)](https://github.com/rummanrc/codejavu-frontend/actions/workflows/npm-build.yml)
+[![Build](https://github.com/rummanrc/codejavu-frontend/actions/workflows/npm-build.yml/badge.svg?branch=chore%2Fworkflow-build)](https://github.com/rummanrc/codejavu-frontend/actions/workflows/npm-build.yml)
+[![Test](https://github.com/rummanrc/codejavu-frontend/actions/workflows/npm-test.yml/badge.svg?branch=chore%2Fworkflow-build)](https://github.com/rummanrc/codejavu-frontend/actions/workflows/npm-test.yml)
+![node](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/rummanrc/90ee50aa93ce086479150422134e56e4/raw/codejavu_node.json)
+[![con_com](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/rummanrc/60d4750d3108550bcf68191cf1e44459/raw/codejavu_conventional_commit.json)](https://conventionalcommits.org)
+[![code_style](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/rummanrc/c5f639373a506af198df86e4d8b1afdf/raw/codejavu_code_style.json)](https://standardjs.com/)
 
-[![Test](https://github.com/rummanrc/codejavu-frontend/actions/workflows/npm-test.yml/badge.svg?branch=chore%2Fworkflow-build&event=check_run)](https://github.com/rummanrc/codejavu-frontend/actions/workflows/npm-test.yml)
-
-[![Build](https://github.com/rummanrc/codejavu-frontend/actions/workflows/npm-build.yml/badge.svg?branch=chore%2Fworkflow-build&event=check_run)](https://github.com/rummanrc/codejavu-frontend/actions/workflows/npm-build.yml)
+![cov_statements](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/rummanrc/9551338162f925dc43214b3fe9ecaf13/raw/codejavu_coverage_statements.json)
+![cov_branches](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/rummanrc/6c5c47e3ca816021a6ce013b04dd3880/raw/codejavu_coverage_branches.json)
+![cov_lines](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/rummanrc/c35ad03761983d3d939a62a2f1d6db70/raw/codejavu_coverage_lines.json)
+![cov_functions](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/rummanrc/11be7f5d7651527ffcf24cc24a8466b2/raw/codejavu_coverage_functions.json)
 
 # Codejavu Frontend
-The frontend (Angular) for the CoDeJaVu project (Rails backend)
 
+The frontend (Angular) for the CoDeJaVu project (Rails backend)
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.2.3.
 
 ## Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change
+any of the source files.
 
 ## Code scaffolding
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Run `ng generate component component-name` to generate a new component. You can also
+use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
 ## Build
 
@@ -28,8 +35,10 @@ Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.
 
 ## Running end-to-end tests
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a
+package that implements end-to-end testing capabilities.
 
 ## Further help
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+To get more help on the Angular CLI use `ng help` or go check out
+the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
