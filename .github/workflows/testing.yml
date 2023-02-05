@@ -23,6 +23,8 @@ jobs:
           cache: 'npm'
       - name: Install dependencies
         run: npm ci
-      - name: Run coverage
-        run: |
-          echo "this is test" >> $GITHUB_ENV
+      - name: Try 1
+        id: try
+        run: echo "this is test" >> $GITHUB_OUTPUT
+      - name: try 2
+        run: echo "The selected color is ${{ steps.try.outputs }}"
