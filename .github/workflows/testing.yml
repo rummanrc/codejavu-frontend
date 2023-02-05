@@ -25,7 +25,6 @@ jobs:
         run: npm ci
       - name: Try 1
         id: try
-        run:
-          echo "SELECTED_COLOR='Branches 96% ( 24/25 )'" >> $GITHUB_OUTPUT
+        run: echo "SELECTED_COLOR=green" >> $GITHUB_OUTPUT
       - name: try 2
         run: echo "The selected color is ${{ steps.try.outputs }}"
