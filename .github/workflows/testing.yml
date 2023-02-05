@@ -26,4 +26,4 @@ jobs:
         run: npm ci
       - name: Run coverage
         run: |
-          echo "this is test" >> $COV
+          echo "this is test" >> ${{COV}}
