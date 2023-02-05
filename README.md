@@ -4,6 +4,11 @@
 [![con_com](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/rummanrc/60d4750d3108550bcf68191cf1e44459/raw/codejavu_conventional_commit.json)](https://conventionalcommits.org)
 [![code_style](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/rummanrc/c5f639373a506af198df86e4d8b1afdf/raw/codejavu_code_style.json)](https://standardjs.com/)
 
+![cov_statements](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/rummanrc/9551338162f925dc43214b3fe9ecaf13/raw/codejavu_coverage_statements.json)
+![cov_branches](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/rummanrc/6c5c47e3ca816021a6ce013b04dd3880/raw/codejavu_coverage_branches.json)
+![cov_lines](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/rummanrc/c35ad03761983d3d939a62a2f1d6db70/raw/codejavu_coverage_lines.json)
+![cov_functions](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/rummanrc/11be7f5d7651527ffcf24cc24a8466b2/raw/codejavu_coverage_functions.json)
+
 # Codejavu Frontend
 
 The frontend (Angular) for the CoDeJaVu project (Rails backend)
