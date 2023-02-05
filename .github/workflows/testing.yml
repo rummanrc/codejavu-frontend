@@ -28,5 +28,5 @@ jobs:
         run: npm ci
       - name: Run coverage
         run: |
-          echo "this is test" >> ${{env.TEST}}
+          echo "this is test" >> $GITHUB_ENV
           echo ${{env.TEST}}
