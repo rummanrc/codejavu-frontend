@@ -44,9 +44,9 @@ jobs:
           export DISPLAY=:99
           chromedriver --url-base=/wd/hub &
           sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 & # optional
-          echo "COVERAGE=$(npm run coverage | tail -5)" >> $GITHUB_OUTPUT
+          echo "array=($(npm run coverage | tail -5))" >> $GITHUB_OUTPUT
       - name: Show coverage
-        run: echo "The selected color is ${{ steps.coverage.outputs.COVERAGE }}"
+        run: echo "The selected color is ${{ steps.coverage.outputs.array }[20]}"
       - name: Statements Coverage
         uses: schneegans/dynamic-badges-action@v1.6.0
         with:
