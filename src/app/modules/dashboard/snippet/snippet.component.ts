@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {RestService} from "../../../services/rest/rest.service";
 import {catchError, map, Observable} from "rxjs";
 import {restAPI} from "../../../constants";
+import {ErrorService} from "../../../services/error/error.service";
 
 @Component({
   selector: 'app-dashboard',
@@ -16,7 +17,7 @@ export class SnippetComponent implements OnInit {
   private _modalCreateEditActive: boolean = false;
   private _snippet: Snippet = {};
 
-  constructor(private _rest: RestService) {
+  constructor(private _rest: RestService, private _error: ErrorService) {
   }
 
   get isModalActive(): boolean {
@@ -55,7 +56,7 @@ export class SnippetComponent implements OnInit {
         this._snippet = data;
       },
       error: err => {
-        //No-op
+        this._error.insertMessage("Failed to load code snippet", err);
       }
     });
     this._modalActive = true;
@@ -120,7 +121,7 @@ export class SnippetComponent implements OnInit {
         this._languages = languageData;
       },
       error: (err) => {
-        //No-op
+        this._error.insertMessage("Language list load error.", err);
       }
     });
   }
@@ -139,7 +140,7 @@ export class SnippetComponent implements OnInit {
         this._tags = tagData;
       },
       error: (err) => {
-        //No-op
+        this._error.insertMessage("Tag list load error.", err);
       }
     });
   }
@@ -151,7 +152,7 @@ export class SnippetComponent implements OnInit {
         this._snippets = value;
       },
       error: err => {
-        //No-op
+        this._error.insertMessage("Snippet list load error.", err);
       }
     });
   }
