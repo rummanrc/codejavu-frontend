@@ -4,6 +4,7 @@ import {RestService} from "../../../../services/rest/rest.service";
 import {CodeJarContainer} from "../editor/NgxCodeJar.component";
 import hljs from "highlight.js";
 import {restAPI} from "../../../../constants";
+import {ErrorService} from "../../../../services/error/error.service";
 
 @Component({
   selector: 'app-snippet-create-edit-dialog',
@@ -26,7 +27,7 @@ export class SnippetCreateEditDialogComponent implements OnChanges {
 
   url: string = "";
 
-  constructor(private _rest: RestService) {
+  constructor(private _rest: RestService, private _error: ErrorService) {
   }
 
   get isModalActive(): boolean {
@@ -55,7 +56,7 @@ export class SnippetCreateEditDialogComponent implements OnChanges {
         }
       },
       error: err => {
-        //No-Op
+        this._error.insertMessage("Failed to save.", err);
       }
     });
   }
