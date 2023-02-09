@@ -29,7 +29,7 @@ module.exports = function (config) {
       dir: require('path').join(__dirname, './coverage/codejavu-frontend'),
       subdir: '.',
       reporters: [
-        // { type: 'html' },
+        { type: 'html' },
         // { type: 'text-summary', file: 'coverage.txt' }
         { type: 'text-summary' }
       ]

@@ -1,20 +1,22 @@
-import { Injectable } from '@angular/core';
-import { User } from './user';
-import { catchError, map, Observable, tap} from 'rxjs';
-import { RestService } from "../rest/rest.service";
-import { restAPI } from "../../constants";
+import {Injectable} from '@angular/core';
+import {User} from './user';
+import {catchError, map, Observable, tap} from 'rxjs';
+import {RestService} from "../rest/rest.service";
+import {restAPI} from "../../constants";
 
 @Injectable({
   providedIn: 'root',
 })
 
 export class AuthService {
-  constructor(private _rest: RestService) {}
+  constructor(private _rest: RestService) {
+  }
+
   get isLoggedIn(): boolean {
     return !!this.getToken();
   }
 
-  getToken(): string|null {
+  getToken(): string | null {
     return localStorage.getItem('token');
   }
 
@@ -27,13 +29,13 @@ export class AuthService {
     const request_body = {'email': user.email, 'password': user.password};
     const api = this._rest.url(restAPI.LOGIN);
     return this._rest.post<any>(api, request_body).pipe(
-      map( (data) => {
+      map((data) => {
         return {token: data.token, userId: data.user_id} as AuthenticationData;
       }),
-      tap( (authData) => {
+      tap((authData) => {
         this.storeData(authData);
       }),
-      catchError( (err) => {
+      catchError((err) => {
         throw  err;
       })
     );

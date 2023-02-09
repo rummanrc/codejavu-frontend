@@ -4,8 +4,9 @@ import {FormBuilder, ReactiveFormsModule} from "@angular/forms";
 import {AuthService} from "../../../services/auth/auth.service";
 import {of} from "rxjs";
 import {Router} from "@angular/router";
+import {ErrorService} from "../../../services/error/error.service";
 
-describe('SignupComponent', () => {
+describe('SignupComponent Success', () => {
   let component: SignupComponent;
   let fixture: ComponentFixture<SignupComponent>;
 
@@ -15,6 +16,7 @@ describe('SignupComponent', () => {
       imports: [ReactiveFormsModule],
       providers: [
         FormBuilder,
+        ErrorService,
         {
           provide: AuthService, useClass: class {
             signUp = jasmine.createSpy("signUp").and.returnValue(of({
@@ -48,41 +50,83 @@ describe('SignupComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-  it("should signup successfully", fakeAsync(() => {
-    spyOn(component, 'registerUser').and.callThrough();
-    let router = fixture.debugElement.injector.get(Router);
-    let auth = fixture.debugElement.injector.get(AuthService);
-    fixture.detectChanges();
-    const name_el = fixture.nativeElement.querySelector("input[type = text][formControlName = name]");
-    const email_el = fixture.nativeElement.querySelector("input[type = email]");
-    const password_el = fixture.nativeElement.querySelector("input[type = password]");
-    const button_el = fixture.nativeElement.querySelector("button[type=submit]");
+  describe('success', () => {
 
-    expect(name_el).toBeTruthy();
-    expect(email_el).toBeTruthy();
-    expect(password_el).toBeTruthy();
-    expect(button_el).toBeTruthy();
+    it("should signup successfully", fakeAsync(() => {
+      spyOn(component, 'registerUser').and.callThrough();
+      let router = fixture.debugElement.injector.get(Router);
+      let auth = fixture.debugElement.injector.get(AuthService);
+      fixture.detectChanges();
+      const name_el = fixture.nativeElement.querySelector("input[type = text][formControlName = name]");
+      const email_el = fixture.nativeElement.querySelector("input[type = email]");
+      const password_el = fixture.nativeElement.querySelector("input[type = password]");
+      const button_el = fixture.nativeElement.querySelector("button[type=submit]");
 
-    name_el.value = "firstnameLastName";
-    name_el.dispatchEvent(new Event('input'));
-    fixture.detectChanges();
-    email_el.value = "test@email.com";
-    email_el.dispatchEvent(new Event('input'));
-    fixture.detectChanges();
-    password_el.value = "12345678";
-    password_el.dispatchEvent(new Event('input'));
-    fixture.detectChanges();
+      expect(name_el).toBeTruthy();
+      expect(email_el).toBeTruthy();
+      expect(password_el).toBeTruthy();
+      expect(button_el).toBeTruthy();
 
-    expect(component.signupForm.get("name")?.value).toEqual("firstnameLastName");
-    expect(component.signupForm.get("email")?.value).toEqual("test@email.com");
-    expect(component.signupForm.get("password")?.value).toEqual("12345678");
+      name_el.value = "firstnameLastName";
+      name_el.dispatchEvent(new Event('input'));
+      fixture.detectChanges();
+      email_el.value = "test@email.com";
+      email_el.dispatchEvent(new Event('input'));
+      fixture.detectChanges();
+      password_el.value = "12345678";
+      password_el.dispatchEvent(new Event('input'));
+      fixture.detectChanges();
 
-    button_el.click();
-    tick();
-    fixture.detectChanges();
+      expect(component.signupForm.get("name")?.value).toEqual("firstnameLastName");
+      expect(component.signupForm.get("email")?.value).toEqual("test@email.com");
+      expect(component.signupForm.get("password")?.value).toEqual("12345678");
 
-    expect(component.registerUser).toHaveBeenCalled();
-    expect(auth.signUp).toHaveBeenCalled();
-    expect(router.navigate).toHaveBeenCalledWith(['login']);
-  }));
+      button_el.click();
+      tick();
+      fixture.detectChanges();
+
+      expect(component.registerUser).toHaveBeenCalled();
+      expect(auth.signUp).toHaveBeenCalled();
+      expect(router.navigate).toHaveBeenCalledWith(['login']);
+    }));
+  });
+  describe('failed', () => {
+    it("should signup failed", fakeAsync(() => {
+      spyOn(component, 'registerUser').and.callThrough();
+      let router = fixture.debugElement.injector.get(Router);
+      let auth = fixture.debugElement.injector.get(AuthService);
+      fixture.detectChanges();
+      const name_el = fixture.nativeElement.querySelector("input[type = text][formControlName = name]");
+      const email_el = fixture.nativeElement.querySelector("input[type = email]");
+      const password_el = fixture.nativeElement.querySelector("input[type = password]");
+      const button_el = fixture.nativeElement.querySelector("button[type=submit]");
+
+      expect(name_el).toBeTruthy();
+      expect(email_el).toBeTruthy();
+      expect(password_el).toBeTruthy();
+      expect(button_el).toBeTruthy();
+
+      name_el.value = "firstnameLastName";
+      name_el.dispatchEvent(new Event('input'));
+      fixture.detectChanges();
+      email_el.value = "test@email.com";
+      email_el.dispatchEvent(new Event('input'));
+      fixture.detectChanges();
+      password_el.value = "12345678";
+      password_el.dispatchEvent(new Event('input'));
+      fixture.detectChanges();
+
+      expect(component.signupForm.get("name")?.value).toEqual("firstnameLastName");
+      expect(component.signupForm.get("email")?.value).toEqual("test@email.com");
+      expect(component.signupForm.get("password")?.value).toEqual("12345678");
+
+      button_el.click();
+      tick();
+      fixture.detectChanges();
+
+      expect(component.registerUser).toHaveBeenCalled();
+      expect(auth.signUp).toHaveBeenCalled();
+      expect(router.navigate).toHaveBeenCalledWith(['login']);
+    }));
+  });
 });

@@ -4,10 +4,13 @@ import {SignInComponent} from './sign-in.component';
 import {AuthenticationData, AuthService} from "../../../services/auth/auth.service";
 import {FormBuilder, ReactiveFormsModule} from "@angular/forms";
 import {Router} from "@angular/router";
-import {of} from "rxjs";
+import {of, throwError} from "rxjs";
+import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
+import {ErrorService} from "../../../services/error/error.service";
+import {HttpErrorResponse} from "@angular/common/http";
 
 
-describe("Failed Logging (Isolate)", () => {
+describe("Successful Login (Isolate)", () => {
   let component: SignInComponent;
   let fixture: ComponentFixture<SignInComponent>;
   beforeEach(async () => {
@@ -80,20 +83,27 @@ describe("Failed Logging (Isolate)", () => {
   }));
 });
 
-describe('SignInComponent (Isolated)', () => {
+describe('Failed Login (Isolated)', () => {
   let component: SignInComponent;
   let fixture: ComponentFixture<SignInComponent>;
+  let httpMock: HttpTestingController;
+  const errorResponse = new HttpErrorResponse({
+    error: {"errors": ["Sorry, incorrect email or password"]},
+    status: 422,
+    statusText: 'Unprocessable Entity',
+  });
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [SignInComponent],
-      imports: [ReactiveFormsModule],
+      imports: [ReactiveFormsModule, HttpClientTestingModule],
       providers: [
         FormBuilder,
         {
           provide: AuthService, useClass: class {
-            logIn = jasmine.createSpy("logIn").and.throwError("Sorry, incorrect email or password");
+            logIn = jasmine.createSpy("logIn").and.returnValue(throwError(errorResponse));
           }
         },
+        ErrorService,
         {
           provide: Router, useClass: class {
             navigate = jasmine.createSpy("navigate").and.resolveTo(false);
@@ -107,12 +117,16 @@ describe('SignInComponent (Isolated)', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(SignInComponent);
     component = fixture.componentInstance;
+    httpMock = TestBed.inject(HttpTestingController);
     fixture.detectChanges();
   });
   it("should login falied", fakeAsync(() => {
-    spyOn(component, 'loginUser').and.callThrough();
     let router = fixture.debugElement.injector.get(Router);
     let auth = fixture.debugElement.injector.get(AuthService);
+    let errorServ = fixture.debugElement.injector.get(ErrorService);
+    spyOn(component, 'loginUser').and.callThrough();
+    spyOn(errorServ, 'insertMessage');
+
     fixture.detectChanges();
     const email_el = fixture.nativeElement.querySelector("input[type = email]");
     const password_el = fixture.nativeElement.querySelector("input[type = password]");
@@ -135,10 +149,10 @@ describe('SignInComponent (Isolated)', () => {
     button_el.click();
     tick();
     fixture.detectChanges();
-
     expect(component.loginUser).toHaveBeenCalled();
-    expect(component.loginUser).toThrowError();
-    expect(auth.logIn).toThrowError('Sorry, incorrect email or password');
+    
+    expect(auth.logIn).toHaveBeenCalled();
+    expect(errorServ.insertMessage).toHaveBeenCalledWith("Login Failed. Try Again.", errorResponse);
     expect(router.navigate).not.toHaveBeenCalled();
   }));
 });

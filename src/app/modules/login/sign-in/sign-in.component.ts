@@ -29,10 +29,10 @@ export class SignInComponent {
     this._auth.logIn(this.loginForm.value).subscribe({
       next: (token) => {
         this._error.insertMessage("Login Success");
-        this._router.navigate([route.SNIPPETS])
-          .catch(err => this._error.insertMessage("Something went wrong.", err));
+        this._router.navigate([route.SNIPPETS]);
       },
       error: (msg) => {
+        console.log(msg);
         this._error.insertMessage("Login Failed. Try Again.", msg);
       }
     });
