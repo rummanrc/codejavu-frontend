@@ -3,6 +3,7 @@ import {FormBuilder, FormGroup} from '@angular/forms';
 import {AuthService} from '../../../services/auth/auth.service';
 import {Router} from '@angular/router';
 import {ErrorService} from "../../../services/error/error.service";
+import {route} from "../../../constants";
 
 @Component({
   selector: 'app-signup',
@@ -31,10 +32,7 @@ export class SignupComponent {
         next: (res) => {
           if (res) {
             this.signupForm.reset();
-            this.router.navigate(['login'])
-              .catch(error => {
-                this._error.insertMessage("Login Page Loading Failed.", error);
-              });
+            this.router.navigate([route.LOGIN]);
           }
         },
         error: (err) => {

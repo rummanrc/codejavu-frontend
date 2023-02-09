@@ -1,4 +1,4 @@
-import {TestBed} from '@angular/core/testing';
+import {fakeAsync, TestBed} from '@angular/core/testing';
 
 import {AuthService} from './auth.service';
 import {RestService} from "../rest/rest.service";
@@ -6,6 +6,7 @@ import {of} from "rxjs";
 import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
 import {restAPI} from "../../constants";
 import {AppConfig} from "../../app-config";
+import {HttpErrorResponse} from "@angular/common/http";
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -47,7 +48,6 @@ describe('AuthService', () => {
 
     spyOn(Object.getPrototypeOf(rest), "url")
       .and.callThrough();
-
   });
 
   let userSignUpResponseData = {
@@ -108,6 +108,27 @@ describe('AuthService', () => {
     expect(service.isLoggedIn).toEqual(true);
     expect(service.getToken()).toEqual("user_signin_response_token");
   });
+  it('should be logged in failed', fakeAsync(() => {
+    const userSignInData = {
+      "email": "user@email.com",
+      "password": "123456"
+    };
+    const loginApi = `${AppConfig.BASE_URL}/login`;
+    const errorResponse = new HttpErrorResponse({
+      error: {"errors": ["Sorry, incorrect email or password"]},
+      status: 422,
+      statusText: 'Unprocessable Entity',
+    });
+
+    service.logIn(userSignInData).subscribe({
+      next: value => {
+      },
+      error: err => {
+        expect(err).toBeTruthy();
+      }
+    });
+    httpMock.expectOne(loginApi).flush(errorResponse);
+  }));
 
   it('should be logged out a user', () => {
     service.doLogout();
