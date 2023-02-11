@@ -5,8 +5,10 @@ import {HttpClientTestingModule, HttpTestingController} from "@angular/common/ht
 import {DashboardModule} from "../../dashboard.module";
 import {By} from "@angular/platform-browser";
 import {restAPI} from "../../../../constants";
-import {Observable, of} from "rxjs";
+import {Observable, of, throwError} from "rxjs";
 import {AppConfig} from "../../../../app-config";
+import {HttpErrorResponse} from "@angular/common/http";
+import {ErrorService} from "../../../../services/error/error.service";
 
 describe('SnippetCreateEditDialogComponent', () => {
   let component: SnippetCreateEditDialogComponent;
@@ -16,7 +18,7 @@ describe('SnippetCreateEditDialogComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, DashboardModule],
-      providers: [RestService],
+      providers: [RestService, ErrorService],
       declarations: [SnippetCreateEditDialogComponent]
     })
       .compileComponents();
@@ -298,8 +300,24 @@ describe('SnippetCreateEditDialogComponent', () => {
     //ToDo: check the response and request
 
     expect(spyCloseSnippetModal).toHaveBeenCalled();
-
   });
 
+  it('should show error message on save failed', () => {
+    const snippetApi = 'http://localhost:3000/snippets';
+    const errorSnippetApiResponse = new HttpErrorResponse({
+      error: 'Invalid request parameters',
+      status: 422,
+      statusText: 'Unprocessable Entity',
+      url: snippetApi
+    });
+    const errorServ = fixture.debugElement.injector.get(ErrorService);
+    spyOn(Object.getPrototypeOf(rest), 'post').and.returnValue(throwError(errorSnippetApiResponse));
+    spyOn(errorServ, 'insertMessage');
+    fixture.detectChanges();
+
+    component.saveCodeSnippet();
+
+    expect(errorServ.insertMessage).toHaveBeenCalledWith("Failed to save.", errorSnippetApiResponse);
+  });
 
 });
