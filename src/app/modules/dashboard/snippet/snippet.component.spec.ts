@@ -5,22 +5,24 @@ import {HttpClientTestingModule, HttpTestingController} from "@angular/common/ht
 import {RestService} from "../../../services/rest/rest.service";
 import {AuthService} from "../../../services/auth/auth.service";
 import {Router} from "@angular/router";
-import {Observable, of} from "rxjs";
+import {Observable, of, throwError} from "rxjs";
 import {DashboardModule} from "../dashboard.module";
 import {restAPI} from "../../../constants";
 import {AppConfig} from "../../../app-config";
 import {ClipboardModule} from "@angular/cdk/clipboard";
+import {ErrorService} from "../../../services/error/error.service";
+import {HttpErrorResponse} from "@angular/common/http";
 
 describe('SnippetComponent', () => {
   let component: SnippetComponent;
   let fixture: ComponentFixture<SnippetComponent>;
   let auth: AuthService;
   let rest: RestService;
-  let httpMock: HttpTestingController;
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, DashboardModule, ClipboardModule],
       providers: [
+        ErrorService,
         RestService,
         {
           provide: Router, useClass: class {
@@ -38,9 +40,10 @@ describe('SnippetComponent', () => {
     component = fixture.componentInstance;
     auth = TestBed.inject(AuthService);
     rest = TestBed.inject(RestService);
-    httpMock = TestBed.inject(HttpTestingController);
+
     fixture.detectChanges();
   });
+
 
   function createUrl(path: string): string {
     return AppConfig.BASE_URL + path;
@@ -191,6 +194,77 @@ describe('SnippetComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should show error message on failed to load snippet', fakeAsync(() => {
+    const api = 'http://localhost:3000/snippets/1';
+    const errorResponse = new HttpErrorResponse({
+      error: 'Invalid request parameters',
+      status: 422,
+      statusText: 'Unprocessable Entity',
+      url: api
+    });
+    const data = 'Invalid request parameters';
+    const httpMock = fixture.debugElement.injector.get(HttpTestingController);
+    let errorServ = fixture.debugElement.injector.get(ErrorService);
+    spyOn(errorServ, 'insertMessage');
+    fixture.detectChanges();
+
+    component.showCodeSnippet(1);
+    httpMock.expectOne(api).flush(data, errorResponse);
+    expect(errorServ.insertMessage).toHaveBeenCalledWith('Failed to load code snippet', errorResponse);
+  }));
+
+  it('should show error message on failed fetching list of tags', () => {
+    const tagApi = 'http://localhost:3000/tags';
+    const errorTagApiResponse = new HttpErrorResponse({
+      error: 'Invalid request parameters',
+      status: 422,
+      statusText: 'Unprocessable Entity',
+      url: tagApi
+    });
+    const errorServ = fixture.debugElement.injector.get(ErrorService);
+    spyOn(Object.getPrototypeOf(rest), 'get').and.returnValue(throwError(errorTagApiResponse));
+    spyOn(errorServ, 'insertMessage');
+    fixture.detectChanges();
+
+    component['loadTagList']();
+
+    expect(errorServ.insertMessage).toHaveBeenCalledWith("Tag list load error.", errorTagApiResponse);
+  });
+  it('should show error message on failed fetching list of languages', () => {
+    const languageApi = 'http://localhost:3000/languages';
+    const errorLanguageApiResponse = new HttpErrorResponse({
+      error: 'Invalid request parameters',
+      status: 422,
+      statusText: 'Unprocessable Entity',
+      url: languageApi
+    });
+    const errorServ = fixture.debugElement.injector.get(ErrorService);
+    spyOn(Object.getPrototypeOf(rest), 'get').and.returnValue(throwError(errorLanguageApiResponse));
+    spyOn(errorServ, 'insertMessage');
+    fixture.detectChanges();
+
+    component['loadLanguageList']();
+
+    expect(errorServ.insertMessage).toHaveBeenCalledWith("Language list load error.", errorLanguageApiResponse);
+  });
+
+  it('should show error message on failed fetching list of snippets', () => {
+    const snippetsApi = 'http://localhost:3000/snippets';
+    const errorSnippetsApiResponse = new HttpErrorResponse({
+      error: 'Invalid request parameters',
+      status: 422,
+      statusText: 'Unprocessable Entity',
+      url: snippetsApi
+    });
+    const errorServ = fixture.debugElement.injector.get(ErrorService);
+    spyOn(Object.getPrototypeOf(rest), 'get').and.returnValue(throwError(errorSnippetsApiResponse));
+    spyOn(errorServ, 'insertMessage');
+    fixture.detectChanges();
+
+    component['loadSnippetList']();
+    expect(errorServ.insertMessage).toHaveBeenCalledWith("Snippet list load error.", errorSnippetsApiResponse);
   });
 
   it('should show list of the snippets', fakeAsync(() => {
