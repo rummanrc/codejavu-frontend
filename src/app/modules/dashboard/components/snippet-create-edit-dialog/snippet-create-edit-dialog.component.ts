@@ -27,6 +27,8 @@ export class SnippetCreateEditDialogComponent implements OnChanges {
 
   url: string = "";
 
+  updateEnable: boolean = false;
+
   constructor(private _rest: RestService, private _error: ErrorService) {
   }
 
@@ -36,8 +38,32 @@ export class SnippetCreateEditDialogComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (!!changes['snippet'] && changes['snippet'].previousValue !== changes['snippet'].currentValue) {
-      //No-Op
+      this.setPreviousData(changes['snippet'].currentValue);
     }
+    this.updateEnable = !!this.snippet?.id;
+  }
+
+  updateCodeSnippet(): void {
+    const tagIds = this.getTagIds();
+    const api = this._rest.url(restAPI.SNIPPETS);
+    this._rest.post(api, {
+      id: this.snippet?.id,
+      language_id: this.langId,
+      title: this.title,
+      snippet: this.code,
+      tags: tagIds,
+      urls: this.urls
+    }).subscribe({
+      next: (data) => {
+        if (data as Snippet) {
+          this.closeSnippetModal();
+          this._error.insertMessage("Update Completed");
+        }
+      },
+      error: err => {
+        this._error.insertMessage("Failed to update.", err);
+      }
+    });
   }
 
   saveCodeSnippet(): void {
@@ -122,5 +148,38 @@ export class SnippetCreateEditDialogComponent implements OnChanges {
     this.tagListMap.forEach((value: Tag) => {
       this.tagList.push(value);
     });
+  }
+
+  private setPreviousData(snippet: Snippet): void {
+    if (!!snippet.title) {
+      this.title = snippet.title;
+    }
+    if (!!snippet.snippet) {
+      this.code = snippet.snippet;
+    }
+    if (!!snippet.urls) {
+      this.urls = snippet.urls;
+    }
+    if (!!snippet.language) {
+      this.langId = this.getLanguageID(snippet.language);
+    }
+    if (!!snippet.tags) {
+      snippet.tags.forEach(tag => {
+        const hash = this.createTagHash(tag);
+        this.tagListMap.set(hash, tag);
+        this.populateTagList();
+      });
+    }
+  }
+
+  private getLanguageID(language: string): number {
+    let index = this.languages.findIndex(value => {
+      return value.name === language;
+    });
+    if (index >= 0) {
+      return this.languages[index].id;
+    } else {
+      return 0;
+    }
   }
 }

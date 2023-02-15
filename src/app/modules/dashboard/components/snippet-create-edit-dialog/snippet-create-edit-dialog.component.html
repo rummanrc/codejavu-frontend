@@ -36,42 +36,48 @@
           </div>
         </div>
         <div class="column">
-            <div class="block">
-              <input class="input mb-5" type="text" [(ngModel)]="title" placeholder="Snippet name">
+          <div class="block">
+            <input class="input mb-5" type="text" [(ngModel)]="title" placeholder="Snippet name">
+          </div>
+          <div class="block">
+            <div class="select">
+              <select id="lang" [(ngModel)]="langId">
+                <option *ngFor="let language of languages" value="{{language.id}}">{{language.name}}</option>
+              </select>
             </div>
-            <div class="block">
-              <div class="select">
-                <select id="lang" [(ngModel)]="langId">
-                  <option *ngFor="let language of languages" value="{{language.id}}">{{language.name}}</option>
-                </select>
-              </div>
-            </div>
-            <div class="block">
-              <div class="is-inline-flex">
-                <input class="input" type="text" [(ngModel)]="url" placeholder="Add url">
-                <button id="add_url" class="button" (click)="addUrlList()">
+          </div>
+          <div class="block">
+            <div class="is-inline-flex">
+              <input class="input" type="text" [(ngModel)]="url" placeholder="Add url">
+              <button id="add_url" class="button" (click)="addUrlList()">
                     <span class="icon is-small">
                       <i class="fa-solid fa-plus"></i>
                     </span>
-                </button>
-              </div>
+              </button>
             </div>
-            <div id="url_list" class="block">
-              <div class="tags p-0 m-0 has-addons" *ngFor = "let url of urls">
-                <span class="tag">{{truncate(url)}}</span>
-                <a class="tag is-delete" (click)="removeUrlfromList(url)"></a>
-              </div>
+          </div>
+          <div id="url_list" class="block">
+            <div class="tags p-0 m-0 has-addons" *ngFor="let url of urls">
+              <span class="tag">{{truncate(url)}}</span>
+              <a class="tag is-delete" (click)="removeUrlfromList(url)"></a>
             </div>
+          </div>
         </div>
       </div>
 
     </section>
     <footer class="modal-card-foot">
-      <button id="save" type="submit" class="button is-success" (click)="saveCodeSnippet()">
+      <button *ngIf="!updateEnable" id="save" type="submit" class="button is-success" (click)="saveCodeSnippet()">
         <span class="icon is-small">
           <i class="fa-regular fa-clipboard"></i>
         </span>
         <span>Save</span>
+      </button>
+      <button *ngIf="updateEnable" id="update" type="submit" class="button is-warning" (click)="updateCodeSnippet()">
+        <span class="icon is-small">
+          <i class="fa-regular fa-clipboard"></i>
+        </span>
+        <span>Update</span>
       </button>
       <button class="button" (click)="closeSnippetModal()">Cancel</button>
       <button id="clear" class="button is-danger is-right" (click)="clearSnippet()">
