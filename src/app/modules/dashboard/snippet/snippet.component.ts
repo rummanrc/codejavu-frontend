@@ -62,10 +62,10 @@ export class SnippetComponent implements OnInit {
     this._modalActive = true;
   }
 
-  showAddEditCodeSnippet(snippet?: Snippet): void {
+  showAddEditCodeSnippet(snippetToEdit?: Snippet): void {
     this.closeSnippetModal();
-    if (snippet !== undefined) {
-      this._snippet = snippet;
+    if (snippetToEdit !== undefined) {
+      this._snippet = snippetToEdit;
     } else {
       this._snippet = {
         title: "Untitled",
