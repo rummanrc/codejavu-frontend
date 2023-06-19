@@ -96,6 +96,7 @@ describe('AuthService', () => {
       "email": "user@email.com",
       "password": "123456"
     };
+    
     spyOn(Object.getPrototypeOf(rest), "post")
       .and.returnValue(of(userSignInResponseData));
 
@@ -103,17 +104,22 @@ describe('AuthService', () => {
       expect(data).toEqual(processedSignInResponse);
     });
 
-    expect(rest.post).toHaveBeenCalledWith(AppConfig.BASE_URL + restAPI.LOGIN, userSignInData);
+    let formData = new FormData();
+    formData.append('username', userSignInData.email);
+    formData.append('password', userSignInData.password);
+
+    expect(rest.post).toHaveBeenCalledWith(AppConfig.BASE_URL + restAPI.LOGIN, formData);
 
     expect(service.isLoggedIn).toEqual(true);
     expect(service.getToken()).toEqual("user_signin_response_token");
   });
+
   it('should be logged in failed', fakeAsync(() => {
     const userSignInData = {
       "email": "user@email.com",
-      "password": "123456"
+      "password": "12345609"
     };
-    const loginApi = `${AppConfig.BASE_URL}/login`;
+    const loginApi = `${AppConfig.BASE_URL}/login/access-token`;
     const errorResponse = new HttpErrorResponse({
       error: {"errors": ["Sorry, incorrect email or password"]},
       status: 422,

@@ -5,8 +5,8 @@ export const route = {
 };
 
 export const restAPI = {
-  LOGIN: '/login',
-  SIGN_UP: '/users',
+  LOGIN: '/login/access-token',
+  SIGN_UP: '/users/open',
   SNIPPETS: '/snippets',
   LANGUAGES: '/languages',
   TAGS: '/tags'

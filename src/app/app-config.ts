@@ -1,3 +1,3 @@
 export class AppConfig {
-  static readonly BASE_URL = 'http://localhost:3000';
+  static readonly BASE_URL = 'http://localhost/api/v1';
 }
