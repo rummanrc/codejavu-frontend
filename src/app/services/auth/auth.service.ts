@@ -26,13 +26,19 @@ export class AuthService {
   }
 
   logIn(user: User): Observable<AuthenticationData> {
-    const request_body = {'email': user.email, 'password': user.password};
+    // const request_body = {'email': user.email, 'password': user.password};
+    let formData: FormData = new FormData();
+    // @ts-ignore
+    formData.append('username', user.email);
+    // @ts-ignore
+    formData.append('password', user.password);
     const api = this._rest.url(restAPI.LOGIN);
-    return this._rest.post<any>(api, request_body).pipe(
+    return this._rest.post<any>(api, formData).pipe(
       map((data) => {
         return {token: data.token, userId: data.user_id} as AuthenticationData;
       }),
       tap((authData) => {
+        console.log(authData);
         this.storeData(authData);
       }),
       catchError((err) => {

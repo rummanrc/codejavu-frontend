@@ -197,7 +197,7 @@ describe('SnippetComponent', () => {
   });
 
   it('should show error message on failed to load snippet', fakeAsync(() => {
-    const api = 'http://localhost:3000/snippets/1';
+    const api = 'http://localhost/api/v1/snippets/1';
     const errorResponse = new HttpErrorResponse({
       error: 'Invalid request parameters',
       status: 422,
@@ -216,7 +216,7 @@ describe('SnippetComponent', () => {
   }));
 
   it('should show error message on failed fetching list of tags', () => {
-    const tagApi = 'http://localhost:3000/tags';
+    const tagApi = 'http://localhost/api/v1/tags';
     const errorTagApiResponse = new HttpErrorResponse({
       error: 'Invalid request parameters',
       status: 422,
@@ -233,7 +233,7 @@ describe('SnippetComponent', () => {
     expect(errorServ.insertMessage).toHaveBeenCalledWith("Tag list load error.", errorTagApiResponse);
   });
   it('should show error message on failed fetching list of languages', () => {
-    const languageApi = 'http://localhost:3000/languages';
+    const languageApi = 'http://localhost/api/v1/languages';
     const errorLanguageApiResponse = new HttpErrorResponse({
       error: 'Invalid request parameters',
       status: 422,
@@ -251,7 +251,7 @@ describe('SnippetComponent', () => {
   });
 
   it('should show error message on failed fetching list of snippets', () => {
-    const snippetsApi = 'http://localhost:3000/snippets';
+    const snippetsApi = 'http://localhost/api/v1/snippets';
     const errorSnippetsApiResponse = new HttpErrorResponse({
       error: 'Invalid request parameters',
       status: 422,
