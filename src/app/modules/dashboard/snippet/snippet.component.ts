@@ -1,13 +1,17 @@
 import {Component, OnInit} from '@angular/core';
 import {RestService} from "../../../services/rest/rest.service";
-import {catchError, map, Observable} from "rxjs";
-import {restAPI} from "../../../constants";
+import {BehaviorSubject, catchError, debounceTime, map, Observable} from "rxjs";
+import {restAPI, route} from "../../../constants";
 import {ErrorService} from "../../../services/error/error.service";
+import {HttpParams} from "@angular/common/http";
+import {ActivatedRoute, Router} from "@angular/router";
+import {SnippetService} from "../services/snippet/snippet.service";
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './snippet.component.html',
   styleUrls: ['./snippet.component.css'],
+  providers: [SnippetService]
 })
 export class SnippetComponent implements OnInit {
   private _snippets: any;
@@ -16,8 +20,16 @@ export class SnippetComponent implements OnInit {
   private _modalActive: boolean = false;
   private _modalCreateEditActive: boolean = false;
   private _snippet: Snippet = {};
+  private _searchResult: SearchResult[] = [];
+  private _showSearchMenu: boolean = false;
+  private _showSearchResultHeader: boolean = false;
+  private _snippetsSearchResult: Snippet[] = [];
+  private $_searchQueryStr: BehaviorSubject<string> = new BehaviorSubject<string>("");
+  private _searchResultCount: number = 0;
 
-  constructor(private _rest: RestService, private _error: ErrorService) {
+  constructor(private _rest: RestService, private _error: ErrorService,
+              private _route: ActivatedRoute, private _router: Router,
+              private _snippetService: SnippetService) {
   }
 
   get isModalActive(): boolean {
@@ -44,10 +56,59 @@ export class SnippetComponent implements OnInit {
     return this._tags;
   }
 
+  get searchResult(): SearchResult[] {
+    return this._searchResult;
+  }
+
+  get searchResultFirstThree(): SearchResult[] {
+    return this._searchResult.slice(0, 3);
+  }
+
+  get showSearchMenu(): boolean {
+    return this._showSearchMenu;
+  }
+
+  get showSearchResultHeader(): boolean {
+    return this._showSearchResultHeader;
+  }
+
+  get searchResultCount(): number {
+    return this._searchResultCount;
+  }
+
   ngOnInit(): void {
+    this.$_searchQueryStr.pipe(
+      debounceTime(500)
+    ).subscribe({
+      next: (query) => {
+        if (query && query.length > 0) {
+          this.getSearchSnippetQuery(query);
+        }
+      }
+    });
+
+    this._snippetService.getSnippet().subscribe({
+      next: value => {
+        this._snippetsSearchResult = value as Snippet[];
+      }
+    });
+
+    this._route.queryParams
+      .subscribe({
+          next: (params) => {
+            if (params['search']) {
+              this._snippets = this._snippetsSearchResult;
+              this._showSearchResultHeader = true;
+            } else {
+              this._showSearchResultHeader = false;
+              this.loadSnippetList();
+            }
+          }
+        }
+      );
     this.loadLanguageList();
     this.loadTagList();
-    this.loadSnippetList();
+
   }
 
   showCodeSnippet(snippetId: number): void {
@@ -86,6 +147,41 @@ export class SnippetComponent implements OnInit {
   closeSnippetCreateEditModal(): void {
     this._modalCreateEditActive = false;
     this._snippet = {};
+  }
+
+  onSearchChange(event: Event): void {
+    this.$_searchQueryStr.next((event.target as HTMLInputElement).value);
+  }
+
+
+  showSearchResult(searchResult: SearchResult[]): void {
+    this._showSearchMenu = false;
+
+    const ids = this.getSnippetIds(searchResult);
+    let api = this._rest.url(restAPI.SEARCH);
+    this._rest.post(api, {ids: ids}).subscribe({
+      next: value => {
+        const searchRes = value as Snippet[];
+        this._searchResultCount = searchRes.length;
+        this._snippetService.insertSnippets(searchRes);
+        this._router.navigate([route.SNIPPETS],
+          {
+            queryParams: {search: true},
+            queryParamsHandling: 'merge'
+          });
+      },
+      error: err => {
+        this._error.insertMessage("Snippet list load error.", err);
+      }
+    });
+  }
+
+  closeSearchMode(): void {
+    this._snippetsSearchResult = [];
+    this._searchResult = [];
+    this._showSearchResultHeader = false;
+    this._snippetService.clearSnippet();
+    this._router.navigate([route.SNIPPETS]);
   }
 
   private loadSnippet(id: number): Observable<Snippet> {
@@ -156,6 +252,32 @@ export class SnippetComponent implements OnInit {
       }
     });
   }
+
+  private getSearchSnippetQuery(query: string): void {
+    const params = new HttpParams()
+      .set('query', query)
+      .set('limit', 4);
+    let api = this._rest.url(restAPI.SEARCH_QUERY + params.toString());
+
+    this._rest.get(api).subscribe({
+      next: value => {
+        this._searchResult = value as SearchResult[];
+        this._showSearchMenu = this._searchResult.length > 3;
+      },
+      error: err => {
+        this._error.insertMessage("Search error.", err);
+      }
+    });
+  }
+
+  private getSnippetIds(searchResult: SearchResult[]): number[] {
+    let ids: number[] = [];
+    searchResult.forEach(item => {
+      ids.push(item.id);
+    });
+    return ids;
+  }
+
 }
 
 export interface Snippet {
@@ -177,3 +299,7 @@ export interface Tag {
   name: string
 }
 
+export interface SearchResult {
+  id: number,
+  title: string
+}

@@ -1,7 +1,7 @@
 export const route = {
   SIGNUP: 'signup',
   LOGIN: 'login',
-  SNIPPETS: 'dashboard/snippets'
+  SNIPPETS: 'dashboard/snippets',
 };
 
 export const restAPI = {
@@ -9,5 +9,7 @@ export const restAPI = {
   SIGN_UP: '/users/open',
   SNIPPETS: '/snippets',
   LANGUAGES: '/languages',
-  TAGS: '/tags'
+  TAGS: '/tags',
+  SEARCH_QUERY: '/snippets/search/?',
+  SEARCH: '/snippets/search'
 };
