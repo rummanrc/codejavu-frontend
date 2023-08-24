@@ -1,16 +1,16 @@
 <app-navbar></app-navbar>
 <app-snippet-show-dialog
-  [modalActive] = "isModalActive"
-  [snippet] = "snippet"
-  (modalDeactivateEvent) = "closeSnippetModal()"
-  (editCodeSnippetEvent) = "showAddEditCodeSnippet(snippet)"
+  [modalActive]="isModalActive"
+  [snippet]="snippet"
+  (modalDeactivateEvent)="closeSnippetModal()"
+  (editCodeSnippetEvent)="showAddEditCodeSnippet(snippet)"
 >
 </app-snippet-show-dialog>
 <app-snippet-create-edit-dialog
-  [modalActive] = "isModalCreateEditActive"
-  [snippet] = "snippet"
-  [languages] = "languages"
-  [tags] = "tags"
+  [modalActive]="isModalCreateEditActive"
+  [snippet]="snippet"
+  [languages]="languages"
+  [tags]="tags"
   (modalDeactivateEvent)="closeSnippetCreateEditModal()"
 >
 </app-snippet-create-edit-dialog>
@@ -22,7 +22,7 @@
       <div class="level-item">
         <div class="field has-addons">
           <p class="has-icons-left control">
-            <input class="input" type="text" placeholder="Find a snippet">
+            <input class="input" type="text" placeholder="Find a snippet" (input)="onSearchChange($event)">
             <span class="icon is-small is-left">
               <i class="fa-solid fa-magnifying-glass"></i>
             </span>

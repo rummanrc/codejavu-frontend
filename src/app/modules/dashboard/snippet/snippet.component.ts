@@ -1,8 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {RestService} from "../../../services/rest/rest.service";
-import {catchError, map, Observable} from "rxjs";
+import {BehaviorSubject, catchError, debounceTime, map, Observable} from "rxjs";
 import {restAPI} from "../../../constants";
 import {ErrorService} from "../../../services/error/error.service";
+import {HttpParams} from "@angular/common/http";
 
 @Component({
   selector: 'app-dashboard',
@@ -16,8 +17,19 @@ export class SnippetComponent implements OnInit {
   private _modalActive: boolean = false;
   private _modalCreateEditActive: boolean = false;
   private _snippet: Snippet = {};
+  private $_searchQueryStr: BehaviorSubject<string> = new BehaviorSubject<string>("");
 
   constructor(private _rest: RestService, private _error: ErrorService) {
+    this.$_searchQueryStr.pipe(
+      debounceTime(500)
+    ).subscribe({
+      next: (query) => {
+        if (query && query.length > 0) {
+          this.getSearchSnippetQuery(query);
+        }
+      }
+    });
+
   }
 
   get isModalActive(): boolean {
@@ -88,6 +100,10 @@ export class SnippetComponent implements OnInit {
     this._snippet = {};
   }
 
+  onSearchChange(event: Event): void {
+    this.$_searchQueryStr.next((event.target as HTMLInputElement).value);
+  }
+
   private loadSnippet(id: number): Observable<Snippet> {
     const api = this._rest.url(`${restAPI.SNIPPETS}/${id}`);
     return this._rest.get<any>(api).pipe(
@@ -153,6 +169,22 @@ export class SnippetComponent implements OnInit {
       },
       error: err => {
         this._error.insertMessage("Snippet list load error.", err);
+      }
+    });
+  }
+
+  private getSearchSnippetQuery(query: string): void {
+    const params = new HttpParams()
+      .set('query', query)
+      .set('limit', 4);
+    let api = this._rest.url(restAPI.SEARCH_QUERY + params.toString());
+
+    this._rest.get(api).subscribe({
+      next: value => {
+        console.log(value);
+      },
+      error: err => {
+        this._error.insertMessage("Search error.", err);
       }
     });
   }
