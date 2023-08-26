@@ -21,14 +21,34 @@
     <div class="level-left">
       <div class="level-item">
         <div class="field has-addons">
-          <p class="has-icons-left control">
-            <input class="input" type="text" placeholder="Find a snippet" (input)="onSearchChange($event)">
-            <span class="icon is-small is-left">
-              <i class="fa-solid fa-magnifying-glass"></i>
-            </span>
-          </p>
+          <div class="dropdown" [ngClass]="showSearchMenu===true? 'is-active':''">
+            <div class="dropdown-trigger">
+              <p class="has-icons-left control">
+                <input class="input" type="text" aria-hidden="true" aria-controls="dropdown-search-result"
+                       placeholder="Find a snippet" (input)="onSearchChange($event)">
+                <span class="icon is-small is-left">
+                <i class="fa-solid fa-magnifying-glass"></i>
+              </span>
+              </p>
+            </div>
+            <div class="dropdown-menu pt-0 mt-0" id="dropdown-search-result" role="menu">
+              <div class="dropdown-content">
+                <a class="dropdown-item px-0"
+                   *ngFor="let item of searchResultFirstThree">
+                  <div class="pl-1 pr-4" (click)="showCodeSnippet(item.id)"
+                       style="width: 100%">
+                    {{item.title|slice:0:25}}{{ item.title.length > 25 ? '....' : '' }}
+                  </div>
+                </a>
+                <p class="is-size-7"
+                   *ngIf="searchResult.length>3">
+                  see more...
+                </p>
+              </div>
+            </div>
+          </div>
           <p class="control">
-            <button class="button">
+            <button class="button" (click)="showSearchResult(searchResult)">
               Search
             </button>
           </p>
@@ -68,9 +88,9 @@
             </div>
           </span>
         </div>
-        <div class="level-item">
+        <div class="level-item" *ngIf="showSearchResultHeader">
           <span class="pb-3">
-            <button class="button is-danger">Reset</button>
+            <button class="button is-danger" (click)="closeSearchMode()">Reset</button>
           </span>
         </div>
       </div>
@@ -78,6 +98,12 @@
     <!-- Right side -->
     <div class="level-right">
       <p class="level-item"><a class="button is-success" (click)="showAddEditCodeSnippet()">Create Snippet</a></p>
+    </div>
+  </div>
+  <!--  Search Result-->
+  <div class="level" *ngIf="showSearchResultHeader">
+    <div class="level-left">
+      <h5 class="title is-5 m-0">Search Results {{searchResultCount}}</h5>
     </div>
   </div>
   <!-- Snippets List -->

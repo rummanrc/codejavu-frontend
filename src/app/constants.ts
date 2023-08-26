@@ -1,7 +1,7 @@
 export const route = {
   SIGNUP: 'signup',
   LOGIN: 'login',
-  SNIPPETS: 'dashboard/snippets'
+  SNIPPETS: 'dashboard/snippets',
 };
 
 export const restAPI = {
