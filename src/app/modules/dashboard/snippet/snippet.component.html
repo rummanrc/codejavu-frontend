@@ -24,7 +24,8 @@
           <div class="dropdown" [ngClass]="showSearchMenu===true? 'is-active':''">
             <div class="dropdown-trigger">
               <p class="has-icons-left control">
-                <input class="input" type="text" aria-hidden="true" aria-controls="dropdown-search-result"
+                <input class="input" id="search-snippet" type="text" aria-hidden="true"
+                       aria-controls="dropdown-search-result"
                        placeholder="Find a snippet" (input)="onSearchChange($event)">
                 <span class="icon is-small is-left">
                 <i class="fa-solid fa-magnifying-glass"></i>
@@ -48,7 +49,7 @@
             </div>
           </div>
           <p class="control">
-            <button class="button" (click)="showSearchResult(searchResult)">
+            <button id="search-btn" class="button" (click)="showSearchResult(searchResult)">
               Search
             </button>
           </p>
