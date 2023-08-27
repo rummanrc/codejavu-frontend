@@ -99,7 +99,6 @@ export class SnippetComponent implements OnInit {
             if (params['search']) {
               this._snippets = this._snippetsSearchResult;
               this._showSearchResultHeader = true;
-              console.log(this._snippetsSearchResult);
             } else {
               this._showSearchResultHeader = false;
               this.loadSnippetList();
