@@ -1,13 +1,13 @@
 import {ComponentFixture, discardPeriodicTasks, fakeAsync, flush, TestBed, tick} from '@angular/core/testing';
 
-import {SnippetComponent} from './snippet.component';
+import {SearchResult, SnippetComponent} from './snippet.component';
 import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
 import {RestService} from "../../../services/rest/rest.service";
 import {AuthService} from "../../../services/auth/auth.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Observable, of, throwError} from "rxjs";
 import {DashboardModule} from "../dashboard.module";
-import {restAPI} from "../../../constants";
+import {restAPI, route} from "../../../constants";
 import {AppConfig} from "../../../app-config";
 import {ClipboardModule} from "@angular/cdk/clipboard";
 import {ErrorService} from "../../../services/error/error.service";
@@ -19,6 +19,7 @@ describe('SnippetComponent', () => {
   let fixture: ComponentFixture<SnippetComponent>;
   let auth: AuthService;
   let rest: RestService;
+  let mockRouter = {navigate: jasmine.createSpy('navigate')};
   const fakeActivatedRoute = {
     queryParams: new Observable((observer) => {
       observer.next({});
@@ -31,16 +32,13 @@ describe('SnippetComponent', () => {
         ErrorService,
         RestService,
         SnippetService,
-        SnippetService,
+        // {
+        //   provide: Router, useClass: class {
+        //     navigate = jasmine.createSpy("navigate").and.resolveTo(true);
+        //   }
+        // },
         {
-          provide: Router, useClass: class {
-            navigate = jasmine.createSpy("navigate").and.resolveTo(true);
-          }
-        },
-        {
-          provide: Router, useClass: class {
-            navigate = jasmine.createSpy("navigate").and.resolveTo(true);
-          }
+          provide: Router, useValue: mockRouter
         },
         {
           provide: ActivatedRoute, useValue: fakeActivatedRoute
@@ -56,6 +54,7 @@ describe('SnippetComponent', () => {
     component = fixture.componentInstance;
     auth = TestBed.inject(AuthService);
     rest = TestBed.inject(RestService);
+    // router = TestBed.inject(Router);
     fixture.detectChanges();
   });
 
@@ -78,6 +77,21 @@ describe('SnippetComponent', () => {
       }
       case createUrl(`${restAPI.SNIPPETS}/1`): {
         return of(snippet);
+      }
+      case createUrl(`${restAPI.SEARCH_QUERY}query=title&limit=4`): {
+        return of(searchResultMetaInfo);
+      }
+      default: {
+        break;
+      }
+    }
+  }
+
+  function fakePost(url: string, data: any): Observable<any> | undefined {
+
+    switch (url) {
+      case createUrl(restAPI.SEARCH): {
+        return of(searchResult);
       }
       default: {
         break;
@@ -202,6 +216,53 @@ describe('SnippetComponent', () => {
         }
       ]
     }
+  ];
+  const searchResultMetaInfo = [
+    {id: 1, title: "title 1"},
+    {id: 2, title: "title 2"},
+    {id: 3, title: "title 3"},
+    {id: 4, title: "title 4"},
+  ];
+  const searchResult = [
+    {
+      "id": 1,
+      "title": "title 1",
+      "language": "php",
+      "tags": []
+    },
+    {
+      "id": 2,
+      "title": "title 2",
+      "language": "java",
+      "tags": [
+        {
+          "id": 1,
+          "name": "general"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "title 3",
+      "language": "c++",
+      "tags": [
+        {
+          "id": 1,
+          "name": "general"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "title 4",
+      "language": "php",
+      "tags": [
+        {
+          "id": 1,
+          "name": "general"
+        }
+      ]
+    },
   ];
   let showModal: boolean = false;
   let showEditModal: boolean = false;
@@ -409,4 +470,234 @@ describe('SnippetComponent', () => {
     flush();
     discardPeriodicTasks();
   }));
+  it('should show search query', fakeAsync(() => {
+    spyOn(Object.getPrototypeOf(rest), 'get').and.callFake(fakeGet);
+    const spyQuerySnippet = spyOn<any>(component, 'getSearchSnippetQuery').and.callThrough();
+    const spyOnSearchInputChange = spyOn<any>(component, 'onSearchChange').and.callThrough();
+    component.ngOnInit();
+    const el_snippet_search = fixture.nativeElement.querySelector("#search-snippet");
+    expect(el_snippet_search).toBeTruthy();
+    el_snippet_search.value = "title";
+    el_snippet_search.dispatchEvent(new Event('input'));
+    tick(1000);
+    fixture.detectChanges();
+    expect(spyOnSearchInputChange).toHaveBeenCalled();
+    expect(spyQuerySnippet).toHaveBeenCalled();
+    discardPeriodicTasks();
+  }));
+  it('should show search search result', fakeAsync(() => {
+    spyOn(Object.getPrototypeOf(rest), 'post').and.callFake(fakePost);
+    const spyShowSearchResult = spyOn<any>(component, 'showSearchResult').and.callThrough();
+    component['_searchResult'] = searchResultMetaInfo as SearchResult[];
+    component.ngOnInit();
+    const el_snippet_search_btn = fixture.nativeElement.querySelector("#search-btn");
+    el_snippet_search_btn.dispatchEvent(new Event('click'));
+    tick();
+    fixture.detectChanges();
+    expect(spyShowSearchResult).toHaveBeenCalled();
+    expect(mockRouter.navigate).toHaveBeenCalledWith([route.SNIPPETS],
+      {
+        queryParams: {search: true},
+        queryParamsHandling: 'merge',
+      });
+    discardPeriodicTasks();
+  }));
+});
+
+describe('SnippetComponentSearch', () => {
+  let component: SnippetComponent;
+  let fixture: ComponentFixture<SnippetComponent>;
+  let auth: AuthService;
+  let rest: RestService;
+  let mockRouter = {navigate: jasmine.createSpy('navigate')};
+  const fakeActivatedRoute = {
+    queryParams: new Observable((observer) => {
+      observer.next({search: true});
+    })
+  };
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule, DashboardModule, ClipboardModule],
+      providers: [
+        ErrorService,
+        RestService,
+        SnippetService,
+        {
+          provide: Router, useValue: mockRouter
+        },
+        {
+          provide: ActivatedRoute, useValue: fakeActivatedRoute
+        }
+      ],
+      declarations: [SnippetComponent]
+    })
+      .compileComponents();
+  });
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(SnippetComponent);
+    component = fixture.componentInstance;
+    auth = TestBed.inject(AuthService);
+    rest = TestBed.inject(RestService);
+    fixture.detectChanges();
+  });
+
+
+  function createUrl(path: string): string {
+    return AppConfig.BASE_URL + path;
+  }
+
+  function fakeGet(url: string): Observable<any> | undefined {
+
+    switch (url) {
+      case createUrl(restAPI.LANGUAGES): {
+        return of(languageList);
+      }
+      case createUrl(restAPI.TAGS): {
+        return of(tagList);
+      }
+      case createUrl(restAPI.SNIPPETS): {
+        return of(snippets);
+      }
+      case createUrl(`${restAPI.SNIPPETS}/1`): {
+        return of(snippet);
+      }
+      default: {
+        break;
+      }
+    }
+  }
+
+  let snippet = {
+    "id": 2,
+    "title": "title 1",
+    "language": "java",
+    "tags": [
+      {
+        "id": 1,
+        "name": "general"
+      }
+    ],
+    "snippet": "<?php echo \"jjjjjjjjjjjjjj\">",
+    "urls": [
+      "asdsd"
+    ]
+  };
+  const languageList = [
+    {
+      "id": 1,
+      "name": "java"
+    },
+    {
+      "id": 2,
+      "name": "php"
+    },
+    {
+      "id": 3,
+      "name": "c++"
+    },
+    {
+      "id": 4,
+      "name": "javascript"
+    }
+  ];
+  const tagList = [
+    {
+      "id": 1,
+      "name": "general"
+    },
+    {
+      "id": 2,
+      "name": "world"
+    },
+    {
+      "id": 3,
+      "name": "auth"
+    }
+  ];
+  const snippets = [
+    {
+      "id": 1,
+      "title": "title 1",
+      "language": "php",
+      "tags": []
+    },
+    {
+      "id": 2,
+      "title": "title 2",
+      "language": "java",
+      "tags": [
+        {
+          "id": 1,
+          "name": "general"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "title 3",
+      "language": "c++",
+      "tags": [
+        {
+          "id": 1,
+          "name": "general"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "title 4",
+      "language": "php",
+      "tags": [
+        {
+          "id": 1,
+          "name": "general"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "title 5",
+      "language": "php",
+      "tags": [
+        {
+          "id": 1,
+          "name": "general"
+        },
+        {
+          "id": 2,
+          "name": "world"
+        },
+        {
+          "id": 3,
+          "name": "auth"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "title 6",
+      "language": "php",
+      "tags": [
+        {
+          "id": 2,
+          "name": "world"
+        }
+      ]
+    }
+  ];
+  let showModal: boolean = false;
+  let showEditModal: boolean = false;
+
+  it('should create search', () => {
+    const spy = spyOnProperty(component, 'snippets', 'get').and.callThrough();
+    expect(component.snippets).toEqual([{}]);
+    expect(spy).toHaveBeenCalled();
+    expect(component).toBeTruthy();
+  });
+
+  it('should close search result page', () => {
+    component.closeSearchMode();
+    expect(mockRouter.navigate).toHaveBeenCalledWith([route.SNIPPETS]);
+  });
 });
