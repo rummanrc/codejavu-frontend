@@ -1,33 +1,49 @@
-import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
+import {ComponentFixture, discardPeriodicTasks, fakeAsync, flush, TestBed, tick} from '@angular/core/testing';
 
 import {SnippetComponent} from './snippet.component';
 import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
 import {RestService} from "../../../services/rest/rest.service";
 import {AuthService} from "../../../services/auth/auth.service";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {Observable, of, throwError} from "rxjs";
 import {DashboardModule} from "../dashboard.module";
 import {restAPI} from "../../../constants";
 import {AppConfig} from "../../../app-config";
 import {ClipboardModule} from "@angular/cdk/clipboard";
 import {ErrorService} from "../../../services/error/error.service";
-import {HttpErrorResponse} from "@angular/common/http";
+import {SnippetService} from "../services/snippet/snippet.service";
+import {HttpErrorResponse} from '@angular/common/http';
 
 describe('SnippetComponent', () => {
   let component: SnippetComponent;
   let fixture: ComponentFixture<SnippetComponent>;
   let auth: AuthService;
   let rest: RestService;
+  const fakeActivatedRoute = {
+    queryParams: new Observable((observer) => {
+      observer.next({});
+    })
+  };
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, DashboardModule, ClipboardModule],
       providers: [
         ErrorService,
         RestService,
+        SnippetService,
+        SnippetService,
         {
           provide: Router, useClass: class {
             navigate = jasmine.createSpy("navigate").and.resolveTo(true);
           }
+        },
+        {
+          provide: Router, useClass: class {
+            navigate = jasmine.createSpy("navigate").and.resolveTo(true);
+          }
+        },
+        {
+          provide: ActivatedRoute, useValue: fakeActivatedRoute
         }
       ],
       declarations: [SnippetComponent]
@@ -40,7 +56,6 @@ describe('SnippetComponent', () => {
     component = fixture.componentInstance;
     auth = TestBed.inject(AuthService);
     rest = TestBed.inject(RestService);
-
     fixture.detectChanges();
   });
 
@@ -286,6 +301,7 @@ describe('SnippetComponent', () => {
 
     const el_snippets = fixture.nativeElement.querySelectorAll("table.table>tbody>tr");
     expect(el_snippets.length).toEqual(6);
+    discardPeriodicTasks();
   }));
 
   it('should show new snippet', fakeAsync(() => {
@@ -314,6 +330,7 @@ describe('SnippetComponent', () => {
     fixture.detectChanges();
     expect(el_snippet_show_dialog.getAttribute("ng-reflect-modal-active")).toBe('false');
     expect(el_snippet_edit_dialog.getAttribute("ng-reflect-modal-active")).toBe('true');
+    discardPeriodicTasks();
   }));
 
 
@@ -326,7 +343,6 @@ describe('SnippetComponent', () => {
     expect(el_snippet).toBeTruthy();
     el_snippet.dispatchEvent(new Event('click'));
     tick();
-
     fixture.detectChanges();
 
     let el_snippet_show_dialog = fixture.nativeElement.querySelector("app-snippet-show-dialog");
@@ -345,19 +361,20 @@ describe('SnippetComponent', () => {
     tick();
     fixture.detectChanges();
     expect(el_snippet_show_dialog.getAttribute("ng-reflect-modal-active")).toBe('false');
+    discardPeriodicTasks();
   }));
 
   it('should show the snippet edit', fakeAsync(() => {
     spyOn(Object.getPrototypeOf(rest), 'get').and.callFake(fakeGet);
     component.ngOnInit();
-    fixture.detectChanges();
+    fixture.autoDetectChanges();
 
     const el_snippet = fixture.nativeElement.querySelector("table.table>tbody>tr:first-child>td:first-child");
     expect(el_snippet).toBeTruthy();
     el_snippet.dispatchEvent(new Event('click'));
     tick();
 
-    fixture.detectChanges();
+    fixture.autoDetectChanges();
 
     let el_snippet_show_dialog = fixture.nativeElement.querySelector("app-snippet-show-dialog");
     expect(el_snippet_show_dialog.getAttribute("ng-reflect-modal-active")).toBe('true');
@@ -373,7 +390,7 @@ describe('SnippetComponent', () => {
 
     el_edit.dispatchEvent(new Event('click'));
     tick();
-    fixture.detectChanges();
+    fixture.autoDetectChanges();
 
     expect(el_snippet_show_dialog.getAttribute("ng-reflect-modal-active")).toBe('false');
     expect(el_snippet_edit_dialog.getAttribute("ng-reflect-modal-active")).toBe('true');
@@ -386,8 +403,10 @@ describe('SnippetComponent', () => {
 
     el_close.dispatchEvent(new Event('click'));
     tick();
-    fixture.detectChanges();
+    fixture.autoDetectChanges();
     expect(el_snippet_show_dialog.getAttribute("ng-reflect-modal-active")).toBe('false');
     expect(el_snippet_edit_dialog.getAttribute("ng-reflect-modal-active")).toBe('false');
+    flush();
+    discardPeriodicTasks();
   }));
 });
