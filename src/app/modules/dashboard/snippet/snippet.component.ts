@@ -10,12 +10,17 @@ import {ErrorService} from "../../../services/error/error.service";
   styleUrls: ['./snippet.component.css'],
 })
 export class SnippetComponent implements OnInit {
+  showOwnSnippetsDetails: boolean = false;
+  showSharedSnippetsDetails: boolean = false;
+  showPublicSnippetsDetails: boolean = false;
+  ownSnippetsSubmenuHeightStyle: number = 69;
   private _snippets: any;
   private _languages: Language[] = [];
   private _tags: Tag[] = [];
   private _modalActive: boolean = false;
   private _modalCreateEditActive: boolean = false;
   private _snippet: Snippet = {};
+
 
   constructor(private _rest: RestService, private _error: ErrorService) {
   }
@@ -88,6 +93,18 @@ export class SnippetComponent implements OnInit {
     this._snippet = {};
   }
 
+  toggleShowOwnSnippetsDetails(): void {
+    this.showOwnSnippetsDetails = !this.showOwnSnippetsDetails;
+  }
+
+  toggleShowPublicSnippetsDetails(): void {
+    this.showPublicSnippetsDetails = !this.showPublicSnippetsDetails;
+  }
+
+  toggleShowSharedSnippetsDetails(): void {
+    this.showSharedSnippetsDetails = !this.showSharedSnippetsDetails;
+  }
+
   private loadSnippet(id: number): Observable<Snippet> {
     const api = this._rest.url(`${restAPI.SNIPPETS}/${id}`);
     return this._rest.get<any>(api).pipe(
@@ -156,6 +173,7 @@ export class SnippetComponent implements OnInit {
       }
     });
   }
+
 }
 
 export interface Snippet {

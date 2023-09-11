@@ -1,102 +1,403 @@
-<app-navbar></app-navbar>
-<app-snippet-show-dialog
-  [modalActive] = "isModalActive"
-  [snippet] = "snippet"
-  (modalDeactivateEvent) = "closeSnippetModal()"
-  (editCodeSnippetEvent) = "showAddEditCodeSnippet(snippet)"
->
-</app-snippet-show-dialog>
-<app-snippet-create-edit-dialog
-  [modalActive] = "isModalCreateEditActive"
-  [snippet] = "snippet"
-  [languages] = "languages"
-  [tags] = "tags"
-  (modalDeactivateEvent)="closeSnippetCreateEditModal()"
->
-</app-snippet-create-edit-dialog>
-<div class="pt-2">
-  <!-- Top Bar -->
-  <div class="level">
-    <!-- Left side -->
-    <div class="level-left">
-      <div class="level-item">
-        <div class="field has-addons">
-          <p class="has-icons-left control">
-            <input class="input" type="text" placeholder="Find a snippet">
-            <span class="icon is-small is-left">
-              <i class="fa-solid fa-magnifying-glass"></i>
-            </span>
-          </p>
-          <p class="control">
-            <button class="button">
-              Search
-            </button>
-          </p>
-        </div>
-        <div class="level-item">
-          <span class="pl-5">
-            <span class="pr-2">
-               <input type="checkbox">
-            </span>
-            <div class="dropdown pb-3">
-              <div class="dropdown-trigger">
-                <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
-                  <span>Filter</span>
-                  <span class="icon is-small">
-                    <i class="fa-solid fa-filter" aria-hidden="true"></i>
-                  </span>
-                </button>
+<!--<app-navbar></app-navbar>-->
+<!--<app-snippet-show-dialog-->
+<!--  [modalActive]="isModalActive"-->
+<!--  [snippet]="snippet"-->
+<!--  (modalDeactivateEvent)="closeSnippetModal()"-->
+<!--  (editCodeSnippetEvent)="showAddEditCodeSnippet(snippet)"-->
+<!--&gt;-->
+<!--</app-snippet-show-dialog>-->
+<!--<app-snippet-create-edit-dialog-->
+<!--  [modalActive]="isModalCreateEditActive"-->
+<!--  [snippet]="snippet"-->
+<!--  [languages]="languages"-->
+<!--  [tags]="tags"-->
+<!--  (modalDeactivateEvent)="closeSnippetCreateEditModal()"-->
+<!--&gt;-->
+<!--</app-snippet-create-edit-dialog>-->
+<!--<div class="pt-2">-->
+<!--  &lt;!&ndash; Top Bar &ndash;&gt;-->
+<!--  <div class="level">-->
+<!--    &lt;!&ndash; Left side &ndash;&gt;-->
+<!--    <div class="level-left">-->
+<!--      <div class="level-item">-->
+<!--        <div class="field has-addons">-->
+<!--          <p class="has-icons-left control">-->
+<!--            <input class="input" type="text" placeholder="Find a snippet">-->
+<!--            <span class="icon is-small is-left">-->
+<!--              <i class="fa-solid fa-magnifying-glass"></i>-->
+<!--            </span>-->
+<!--          </p>-->
+<!--          <p class="control">-->
+<!--            <button class="button">-->
+<!--              Search-->
+<!--            </button>-->
+<!--          </p>-->
+<!--        </div>-->
+<!--        <div class="level-item">-->
+<!--          <span class="pl-5">-->
+<!--            <span class="pr-2">-->
+<!--               <input type="checkbox">-->
+<!--            </span>-->
+<!--            <div class="dropdown pb-3">-->
+<!--              <div class="dropdown-trigger">-->
+<!--                <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">-->
+<!--                  <span>Filter</span>-->
+<!--                  <span class="icon is-small">-->
+<!--                    <i class="fa-solid fa-filter" aria-hidden="true"></i>-->
+<!--                  </span>-->
+<!--                </button>-->
+<!--              </div>-->
+<!--              <div class="dropdown-menu" id="dropdown-menu" role="menu">-->
+<!--                <div class="dropdown-content">-->
+<!--                  <div class="dropdown-item">-->
+<!--                    <input class="input is-primary" type="text" placeholder="Language">-->
+<!--                  </div>-->
+<!--                  <hr class="dropdown-divider">-->
+<!--                  <span class="dropdown-item">-->
+<!--                    <label class="checkbox">-->
+<!--                      <input type="checkbox">-->
+<!--                      All-->
+<!--                    </label>-->
+<!--                  </span>-->
+<!--                  <hr class="dropdown-divider">-->
+<!--                  <span class="dropdown-item">-->
+<!--                    Language name-->
+<!--                  </span>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </span>-->
+<!--        </div>-->
+<!--        <div class="level-item">-->
+<!--          <span class="pb-3">-->
+<!--            <button class="button is-danger">Reset</button>-->
+<!--          </span>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    &lt;!&ndash; Right side &ndash;&gt;-->
+<!--    <div class="level-right">-->
+<!--      <p class="level-item"><a class="button is-success" (click)="showAddEditCodeSnippet()">Create Snippet</a></p>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--  &lt;!&ndash; Snippets List &ndash;&gt;-->
+<!--  <table class="table is-narrow is-hoverable is-fullwidth pt-2">-->
+<!--    <thead>-->
+<!--    <tr>-->
+<!--      <th>Title</th>-->
+<!--      <th>Language</th>-->
+<!--      <th></th>-->
+<!--      <th>Date</th>-->
+<!--    </tr>-->
+<!--    </thead>-->
+<!--    <tbody>-->
+<!--    <tr *ngFor="let snippet of snippets">-->
+<!--      <td class="is-clickable" (click)="showCodeSnippet(snippet.id)">{{snippet.title}}</td>-->
+<!--      <td>{{snippet.language}}</td>-->
+<!--      <td><i class="fa-solid fa-file-export"></i></td>-->
+<!--      <td>{{snippet.date}}</td>-->
+<!--    </tr>-->
+<!--    </tbody>-->
+<!--  </table>-->
+<!--</div>-->
+
+<div class="row align-items-start p-0 m-0">
+  <div class="col-lg-2 pe-2 ps-0 m-0" style="background-color: #343738; height: 100vh">
+    <div class="header">
+      <h5 class="text-white">Codejavu v1.0.0</h5>
+    </div>
+    <div class="px-1">
+      <div class="card" style="border-color: #343738; background-color: #343738">
+        <div class="card-body p-0">
+          <div class="container p-0 my-2" style="background-color: #393D3F;">
+            <div class="row align-items-start mx-auto">
+              <div class="row p-0 m-0">
+                <span
+                  (click)="toggleShowOwnSnippetsDetails()"
+                  type="button" class="py-2 px-4 text-white"
+                  style="fontWeight: 500;font-size: small; background-color: #44484B;">Snippets
+                </span>
               </div>
-              <div class="dropdown-menu" id="dropdown-menu" role="menu">
-                <div class="dropdown-content">
-                  <div class="dropdown-item">
-                    <input class="input is-primary" type="text" placeholder="Language">
+              <div *ngIf="showOwnSnippetsDetails" class="row p-0 m-0">
+                <div class="col-3 py-3" style="margin-top: -0.20rem !important;">
+                  <div [style.height.px]=ownSnippetsSubmenuHeightStyle
+                       style="border-right: 4px solid #4E5559; background-color: #393D3F;"></div>
+                </div>
+                <div class="col-9">
+                  <div class="row px-2 py-1">
+                    <div class="col-8">
+                      <span class="text-white" style="fontWeight: 500;font-size: small;">All</span>
+                    </div>
+                    <div class="col-4 p-0">
+                      <span class="text-white" style="fontWeight: 500;font-size: small;">(128)</span>
+                    </div>
                   </div>
-                  <hr class="dropdown-divider">
-                  <span class="dropdown-item">
-                    <label class="checkbox">
-                      <input type="checkbox">
-                      All
-                    </label>
-                  </span>
-                  <hr class="dropdown-divider">
-                  <span class="dropdown-item">
-                    Language name
-                  </span>
+                  <div class="row px-2 py-1">
+                    <div class="col-8">
+                      <span class="text-white" style="fontWeight: 500;font-size: small;">Java</span>
+                    </div>
+                    <div class="col-4 p-0">
+                      <span class="text-white" style="fontWeight: 500;font-size: small;">(128)</span>
+                    </div>
+                  </div>
+                  <div class="row px-2 py-1">
+                    <div class="col-8">
+                      <span class="text-white" style="fontWeight: 500;font-size: small;">Python</span>
+                    </div>
+                    <div class="col-4 p-0">
+                      <span class="text-white" style="fontWeight: 500;font-size: small;">(128)</span>
+                    </div>
+                  </div>
+                  <!--                <a href="#" class="card-link">Card link</a>-->
+                  <!--                <a href="#" class="card-link">Another link</a>-->
                 </div>
               </div>
             </div>
-          </span>
-        </div>
-        <div class="level-item">
-          <span class="pb-3">
-            <button class="button is-danger">Reset</button>
-          </span>
+          </div>
+          <div class="container p-0 my-2" style="background-color: #393D3F;">
+            <div class="row align-items-start mx-auto">
+              <div class="row p-0 m-0">
+                <span
+                  (click)="toggleShowPublicSnippetsDetails()"
+                  type="button" class="py-2 px-4 text-white"
+                  style="fontWeight: 500;font-size: small; background-color: #44484B;">Public
+                </span>
+              </div>
+              <div *ngIf="showPublicSnippetsDetails" class="row p-0 m-0">
+                <div class="col-3 py-3" style="margin-top: -0.25rem !important;">
+                  <div style="border-right: 4px solid #4E5559; height: 100px;background-color: #393D3F;"></div>
+                </div>
+                <div class="col-9">
+                  <div class="row px-2 py-1">
+                    <div class="col-8">
+                      <span class="text-white" style="fontWeight: 500;font-size: small;">All</span>
+                    </div>
+                    <div class="col-4 p-0">
+                      <span class="text-white" style="fontWeight: 500;font-size: small;">(128)</span>
+                    </div>
+                  </div>
+                  <div class="row px-2 py-1">
+                    <div class="col-8">
+                      <span class="text-white" style="fontWeight: 500;font-size: small;">Java</span>
+                    </div>
+                    <div class="col-4 p-0">
+                      <span class="text-white" style="fontWeight: 500;font-size: small;">(128)</span>
+                    </div>
+                  </div>
+                  <div class="row px-2 py-1">
+                    <div class="col-8">
+                      <span class="text-white" style="fontWeight: 500;font-size: small;">Python</span>
+                    </div>
+                    <div class="col-4 p-0">
+                      <span class="text-white" style="fontWeight: 500;font-size: small;">(128)</span>
+                    </div>
+                  </div>
+                  <!--                <a href="#" class="card-link">Card link</a>-->
+                  <!--                <a href="#" class="card-link">Another link</a>-->
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="container p-0 my-2" style="background-color: #393D3F;">
+            <div class="row align-items-start mx-auto">
+              <div class="row p-0 m-0">
+                <span
+                  (click)="toggleShowSharedSnippetsDetails()"
+                  type="button" class="py-2 px-4 text-white"
+                  style="fontWeight: 500;font-size: small; background-color: #44484B;">Shared
+                </span>
+              </div>
+              <div *ngIf="showSharedSnippetsDetails" class="row p-0 m-0">
+                <div class="col-3 py-3" style="margin-top: -0.25rem !important;">
+                  <div style="border-right: 4px solid #4E5559; height: 100px;background-color: #393D3F;"></div>
+                </div>
+                <div class="col-9">
+                  <div class="row px-2 py-1">
+                    <div class="col-8">
+                      <span class="text-white" style="fontWeight: 500;font-size: small;">All</span>
+                    </div>
+                    <div class="col-4 p-0">
+                      <span class="text-white" style="fontWeight: 500;font-size: small;">(128)</span>
+                    </div>
+                  </div>
+                  <div class="row px-2 py-1">
+                    <div class="col-8">
+                      <span class="text-white" style="fontWeight: 500;font-size: small;">Java</span>
+                    </div>
+                    <div class="col-4 p-0">
+                      <span class="text-white" style="fontWeight: 500;font-size: small;">(128)</span>
+                    </div>
+                  </div>
+                  <div class="row px-2 py-1">
+                    <div class="col-8">
+                      <span class="text-white" style="fontWeight: 500;font-size: small;">Python</span>
+                    </div>
+                    <div class="col-4 p-0">
+                      <span class="text-white" style="fontWeight: 500;font-size: small;">(128)</span>
+                    </div>
+                  </div>
+                  <!--                <a href="#" class="card-link">Card link</a>-->
+                  <!--                <a href="#" class="card-link">Another link</a>-->
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="container p-0 my-2" style="background-color: #393D3F;">
+            <div class="row align-items-start mx-auto">
+              <div class="row p-0 m-0">
+                <span
+                  type="button" class="py-2 px-4 text-white"
+                  style="fontWeight: 500;font-size: small; background-color: #44484B;">Settings
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-    <!-- Right side -->
-    <div class="level-right">
-      <p class="level-item"><a class="button is-success" (click)="showAddEditCodeSnippet()">Create Snippet</a></p>
+  </div>
+  <div class="col-lg-10 ps-2 overflow-auto" style="height: 100vh">
+    <!--    Search Part-->
+    <div class="row " style="background-color: #dceaf5">
+      <!--      Search input     -->
+      <div class="col-6">
+        <div class="input-group mb-3 mt-lg-4">
+          <input type="text" class="form-control" list="datalistOptions" placeholder="Snippet's title"
+                 aria-label="Snippet's title"
+                 aria-describedby="button-addon2">
+          <datalist id="datalistOptions">
+            <option value="San Francisco">
+            <option value="New York">
+            <option value="Seattle">
+            <option value="Los Angeles">
+            <option value="Chicago">
+          </datalist>
+          <button class="btn btn-outline-secondary" type="button" id="button-addon2">Search</button>
+        </div>
+      </div>
+      <!--      Search filter    -->
+      <div class="col-6">
+        <div class="row px-2 mt-lg-4">
+          <div class="col-lg px-2">
+            <!--            Filter Activate for Language     -->
+            <div class="form-check form-switch d-inline mt-lg-4 p-0">
+              <input class="form-check-input m-0" type="checkbox" id="flexLanguageSwitchCheckChecked" checked>
+            </div>
+            <!--            Filter Language select    　-->
+            <div class="d-inline dropdown px-2">
+              <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownLanguageMenuButton"
+                      data-bs-toggle="dropdown" aria-expanded="false">
+                Select Language
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="dropdownLanguageMenuButton">
+                <li class="px-1">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="">
+                    <label class="form-check-label">
+                      Python
+                    </label>
+                  </div>
+                </li>
+                <li class="px-1">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="">
+                    <label class="form-check-label">
+                      Javascript
+                    </label>
+                  </div>
+                </li>
+                <li class="px-1">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="">
+                    <label class="form-check-label">
+                      Typescript
+                    </label>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-lg px-2">
+            <!--            Filter Activate for Tags    -->
+            <div class="form-check form-switch d-inline mt-lg-4 p-0">
+              <input class="form-check-input m-0" type="checkbox" id="flexTagSwitchCheckChecked" checked>
+            </div>
+            <!--            Filter Tag select   -->
+            <div class="dropdown d-inline px-2">
+              <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
+                      data-bs-toggle="dropdown" aria-expanded="false">
+                Select Tag
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                <li class="px-1">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="">
+                    <label class="form-check-label">
+                      Artificial Intelligence
+                    </label>
+                  </div>
+                </li>
+                <li class="px-1">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="">
+                    <label class="form-check-label">
+                      Session
+                    </label>
+                  </div>
+                </li>
+                <li class="px-1">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="">
+                    <label class="form-check-label">
+                      Image Processing
+                    </label>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--    Snippet List Part-->
+    <div class="row mt-5 px-2">
+      <!--       Snippet Card -->
+      <div *ngFor="let snippet of snippets"
+           class="card my-2">
+        <div class="card-body">
+          <div class="row p-0 m-auto">
+            <h5 class="card-title">{{snippet.title}}</h5>
+          </div>
+          <div class="row p-0 m-auto">
+            <div class="col p-0 m-auto">
+              <span class="badge rounded-pill bg-light text-dark">Artificial Intelligent</span>
+              <span class="badge rounded-pill bg-light text-dark">Image Processing</span>
+              <span class="badge rounded-pill bg-light text-dark">Machine Learning</span>
+              <span class="badge rounded-pill bg-light text-dark">Image Enhancement</span>
+            </div>
+            <div class="col p-0 m-auto">
+              <div class="row p-0 m-0">
+                <div class="col-2 p-0 m-0">
+                  <i class="fa-solid fa-circle fa-2xs" style="color: #fff714;"></i>
+                  <span class="ps-1">{{snippet.language}}</span>
+                </div>
+                <div class="col-2 p-0 m-0">
+                  <i class="fa-solid fa-square fa-2xs" style="color: #b5e925;"></i>
+                  <span class="px-1">Public</span>
+                  <i class="fa-solid fa-link fa-2xs"></i>
+                </div>
+                <div class="col-8 p-0 m-0">
+                  <i class="fa-regular fa-eye-slash px-2"></i>
+                  <i class="fa-solid fa-trash px-2"></i>
+                  <i class="fa-regular fa-copy px-2"></i>
+                  <i class="fa-solid fa-people-group px-2"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
-  <!-- Snippets List -->
-  <table class="table is-narrow is-hoverable is-fullwidth pt-2">
-    <thead>
-    <tr>
-      <th>Title</th>
-      <th>Language</th>
-      <th></th>
-      <th>Date</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr *ngFor="let snippet of snippets">
-      <td class="is-clickable" (click)="showCodeSnippet(snippet.id)">{{snippet.title}}</td>
-      <td>{{snippet.language}}</td>
-      <td><i class="fa-solid fa-file-export"></i></td>
-      <td>{{snippet.date}}</td>
-    </tr>
-    </tbody>
-  </table>
 </div>
