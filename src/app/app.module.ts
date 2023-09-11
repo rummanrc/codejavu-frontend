@@ -12,6 +12,7 @@ import {DashboardModule} from "./modules/dashboard/dashboard.module";
 import {AuthGuard} from "./services/auth/auth.guard";
 import {ErrorService} from "./services/error/error.service";
 import {SnackbarComponent} from './components/snackbar/snackbar.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import {SnackbarComponent} from './components/snackbar/snackbar.component';
     ReactiveFormsModule,
     BrowserAnimationsModule,
     LoginModule,
-    DashboardModule
+    DashboardModule,
+    NgbModule
   ],
   providers: [
     RestService,
