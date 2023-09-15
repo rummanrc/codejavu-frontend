@@ -1,3 +1,18 @@
 @import '~@fortawesome/fontawesome-free/css/all.min.css';
 @import "~highlight.js/styles/github.css";
 @import "~bootstrap/dist/css/bootstrap.css";
+
+@media (min-width: 1024px) {
+  .collapse.dont-collapse-lg {
+    display: block;
+    height: auto !important;
+    visibility: visible;
+  }
+
+  .cdjvu-sidebar {
+    height: 100vh;
+    width: 200px;
+    background-color: #343738;
+  }
+
+}
